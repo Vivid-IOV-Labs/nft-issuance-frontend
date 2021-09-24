@@ -180,7 +180,10 @@ export default defineComponent({
     ) {
       showQRCode.value = true;
     }
-    if (showQRCode.value) {
+    if (
+      ["issued", "claimed"].includes(props.nft.current_status) &&
+      withRole(["public"])
+    ) {
       webSocket.socket.on("expired", (data) => {
         console.log("expired", data);
         invalidQR.value = true;
@@ -190,11 +193,15 @@ export default defineComponent({
       });
       webSocket.socket.on("signed", (data) => {
         console.log("signed", data);
+        store.commit("nft/setStatus", { id: props.nft.id, status: "signed" });
         invalidQR.value = true;
       });
       webSocket.socket.on("delivered", (data) => {
-        console.log("signed", data);
-        store.commit("setStatus", { id: props.nft.id, status: "delivered" });
+        console.log("delivered", data);
+        store.commit("nft/setStatus", {
+          id: props.nft.id,
+          status: "delivered",
+        });
         invalidQR.value = true;
       });
       webSocket.socket.on("rejected", (data) => {
