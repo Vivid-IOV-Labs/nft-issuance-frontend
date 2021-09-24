@@ -1,15 +1,17 @@
 import { NFTState } from "./state";
 import { NFT } from "../../../models/NFT";
+const getAll = (state: NFTState): Array<NFT> =>
+  state.all.filter((nft) => nft.current_status !== "delivered");
 
 export default {
-  getAll: (state: NFTState): Array<NFT> => state.all,
+  getAll,
   getTotal: (state: NFTState): number => state.totalItems,
   getQuery: (state: NFTState): Record<string, string | number> => state.query,
   byTitle:
     (state: NFTState) =>
     (title: string): Array<NFT> => {
       if (title) {
-        return state.all.filter((media) => {
+        return getAll(state).filter((media) => {
           const searchParams = title
             .toLocaleLowerCase()
             .trim()

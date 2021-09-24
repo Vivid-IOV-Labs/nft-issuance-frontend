@@ -26,6 +26,14 @@ const mutations: MutationTree<NFTState> = {
   remove(state: NFTState, id: string): void {
     state.all = state.all.filter((media) => media.id !== id);
   },
+  setStatus(state: NFTState, { id, status }): void {
+    const index = state.all.findIndex((nft) => {
+      return nft.id === id;
+    });
+    if (index > -1) {
+      state.all[index].current_status = status;
+    }
+  },
 };
 
 export default mutations;

@@ -1,5 +1,8 @@
 <template>
-  <div class="rounded-lg border bg-white shadow-lg">
+  <div
+    v-if="nft.current_status !== 'delivered'"
+    class="rounded-lg border bg-white shadow-lg"
+  >
     <div class="w-full rounded-t-lg h-80 overflow-hidden">
       <img
         :class="{
@@ -11,7 +14,7 @@
         @error="fallbackImg"
       />
     </div>
-    <div class="flex justify-between h-12 p-3 items-center">
+    <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
       <a
         v-if="showQRCode && !invalidQR"
         class="
@@ -100,14 +103,17 @@
         <span class="text-sm text-gray-400 font-medium">Tags:{{ tags }}</span>
       </div>
     </div>
-    <div class="border-t-2 p-4 flex justify-end">
+    <div
+      v-if="canDelete || canApprove || canClaim || canReject || canIssue"
+      class="border-t-2 p-4 flex justify-end"
+    >
       <base-button v-if="canDelete" class="mr-2" @click="deleteNFT"
         >Delete</base-button
       >
       <base-button v-if="canApprove" class="mr-2" @click="approveNFT"
         >Approve</base-button
       >
-      <base-button v-if="canIssue" class="mr-2" @click="issueNFT"
+      <base-button v-if="canIssue" can-claimclass="mr-2" @click="issueNFT"
         >Issue</base-button
       >
       <base-button v-if="canClaim" class="mr-2" @click="claimNFT"
@@ -169,7 +175,8 @@ export default defineComponent({
     if (
       props.nft.xumm &&
       props.nft.xumm.length &&
-      props.nft.xumm[0].details.refs.qr_png
+      props.nft.xumm[0].details.refs.qr_png &&
+      ["issued", "claimed"].includes(props.nft.current_status)
     ) {
       showQRCode.value = true;
     }
@@ -183,6 +190,11 @@ export default defineComponent({
       });
       webSocket.socket.on("signed", (data) => {
         console.log("signed", data);
+        invalidQR.value = true;
+      });
+      webSocket.socket.on("delivered", (data) => {
+        console.log("signed", data);
+        store.commit("setStatus", { id: props.nft.id, status: "delivered" });
         invalidQR.value = true;
       });
       webSocket.socket.on("rejected", (data) => {
@@ -243,6 +255,10 @@ export default defineComponent({
       return (
         ["issued"].includes(this.nft.current_status) && withRole(["public"])
       );
+    },
+    canScan() {
+      //onst { length, [length - 1]: last } = this.nft.xumm;
+      return ["claimed"].includes(this.nft.current_status) && this.xumnQRCode;
     },
     xumnQRCode(): string {
       const { length, [length - 1]: last } = this.nft.xumm;
