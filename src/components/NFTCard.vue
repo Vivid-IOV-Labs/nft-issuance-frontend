@@ -70,7 +70,10 @@
     </div>
     <div class="w-full flex justify-between p-3">
       <div class="flex w-full flex-col justify-between">
-        <span class="font-bold text-xl">{{ title }}</span>
+        <h2 class="font-bold text-xl">
+          {{ title }}
+          <small class="text-sm text-gray-600">{{ brand_name }}</small>
+        </h2>
         <div class="flex mt-2">
           <span
             v-if="nft.current_status"
@@ -326,6 +329,13 @@ export default defineComponent({
     title(): string {
       if (this.nft && this.nft.details && this.nft.details.title) {
         return this.nft.details.title;
+      } else {
+        return "";
+      }
+    },
+    brand_name(): string {
+      if (this.nft && this.nft.details && this.nft.details.brand_name) {
+        return this.nft.details.brand_name;
       } else {
         return "";
       }

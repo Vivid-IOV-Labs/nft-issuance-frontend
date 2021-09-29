@@ -202,7 +202,6 @@ export default defineComponent({
       async submit(event: Event) {
         event.preventDefault();
         const isFormCorrect = await v$.value.$validate();
-        debugger;
         if (!isFormCorrect) return;
         try {
           await store.dispatch("nft/create", formData);

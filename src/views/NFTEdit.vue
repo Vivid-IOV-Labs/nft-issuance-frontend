@@ -195,41 +195,15 @@ export default defineComponent({
       v$,
       async submit(event: Event) {
         event.preventDefault();
+        const isFormCorrect = await v$.value.$validate();
+        if (!isFormCorrect) return;
         try {
-          const toUpdate = JSON.parse(JSON.stringify(data));
-          const updatedMedia: Media = {
-            publisher: {
-              walletAddress: toUpdate.formData.publisher.walletAddress,
-            },
-            mediaID: Array.isArray(route.params.mediaID)
-              ? route.params.mediaID.join("")
-              : route.params.mediaID,
-            list: {
-              highlighted: toUpdate.formData.list.highlighted,
-              order: toUpdate.formData.list.order,
-            },
-            categories: formatArraysString(toUpdate.formData.categories),
-            details: {
-              title: toUpdate.formData.details.title,
-              subtitle: toUpdate.formData.details.subtitle || "",
-              moreInfo: toUpdate.formData.details.moreInfo || "",
-              twitter: {
-                hashtags: formatArraysString(
-                  toUpdate.formData.details.twitter.hashtags
-                ),
-              },
-            },
-          };
-          await MediaService.update(updatedMedia);
-          showSuccess.value = true;
+          // await store.dispatch("nft/create", formData);
+          // showSuccess.value = true;
         } catch (error) {
-          const {
-            response: {
-              data: { message },
-            },
-          } = error;
-          errorMessage.value = String(message);
-          showError.value = true;
+          console.log(error);
+          // errorMessage.value = String(message);
+          // showError.value = true;
         }
       },
       formatVuelidateErrors(errors: any[]) {
