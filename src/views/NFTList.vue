@@ -14,10 +14,12 @@
     <nft-card v-for="nft in allNFT" :key="nft.id" :nft="nft"></nft-card>
     <router-link
       v-if="canCreate"
+      status="success"
       class="
         w-16
         h-16
-        bg-red-500
+        bg-green-500
+        hover:bg-green-600
         text-white
         font-bolder
         text-3xl

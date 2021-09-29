@@ -38,8 +38,6 @@ async function approve(NFT: NFT): Promise<ResponseNFT> {
   const {
     data: { nft: approvedNFT },
   } = await ApiService.post(`${API_ENDPOINT}/approve`, NFT);
-  console.log(approvedNFT);
-  debugger;
   return approvedNFT;
 }
 
@@ -47,8 +45,6 @@ async function issue(NFT: NFT): Promise<ResponseNFT> {
   const {
     data: { nft: issuedNFT },
   } = await ApiService.post(`${API_ENDPOINT}/issue`, NFT);
-  console.log(issuedNFT);
-  debugger;
   return issuedNFT;
 }
 
@@ -56,8 +52,6 @@ async function claim(NFT: NFT): Promise<ResponseNFT> {
   const {
     data: { nft: claimedNFT },
   } = await ApiService.post(`${API_ENDPOINT}/claim`, NFT);
-  console.log(claimedNFT);
-  debugger;
   return claimedNFT;
 }
 

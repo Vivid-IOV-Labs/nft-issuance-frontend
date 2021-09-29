@@ -107,19 +107,39 @@
       v-if="canDelete || canApprove || canClaim || canReject || canIssue"
       class="border-t-2 p-4 flex justify-end"
     >
-      <base-button v-if="canDelete" class="mr-2" @click="deleteNFT"
+      <base-button
+        v-if="canDelete"
+        class="mr-2"
+        status="danger"
+        @click="deleteNFT"
         >Delete</base-button
       >
-      <base-button v-if="canApprove" class="mr-2" @click="approveNFT"
+      <base-button
+        v-if="canApprove"
+        class="mr-2"
+        status="success"
+        @click="approveNFT"
         >Approve</base-button
       >
-      <base-button v-if="canIssue" can-claimclass="mr-2" @click="issueNFT"
+      <base-button
+        v-if="canIssue"
+        class="mr-2"
+        status="success"
+        @click="issueNFT"
         >Issue</base-button
       >
-      <base-button v-if="canClaim" class="mr-2" @click="claimNFT"
+      <base-button
+        v-if="canClaim"
+        class="mr-2"
+        status="success"
+        @click="claimNFT"
         >Claim</base-button
       >
-      <base-button v-if="canReject" class="mr-2" @click="deleteNFT"
+      <base-button
+        v-if="canReject"
+        class="mr-2"
+        status="warning"
+        @click="deleteNFT"
         >Reject</base-button
       >
     </div>

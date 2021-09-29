@@ -20,10 +20,7 @@
           />
         </li>
         <li class="mr-2">
-          <span v-if="isProduction" class="text-lg uppercase font-bold"
-            >Production</span
-          >
-          <span v-else class="text-lg uppercase font-bold">Test</span>
+          <span class="text-lg uppercase font-bold">nft Test</span>
         </li>
       </ul>
 
@@ -79,11 +76,21 @@ export default defineComponent({
   setup: () => {
     const route = useRoute();
     const router = useRouter();
-    const title = computed(() => route.meta.title);
     const isBrandWorker = withRole(["brand/worker"]);
     const isBrandManager = withRole(["brand/manager"]);
     const isAdminWorker = withRole(["admin/worker"]);
     const isPublic = withRole(["public"]);
+
+    const getTitle = () =>
+      isBrandWorker
+        ? "BRAND WORKER"
+        : isBrandManager
+        ? "BRAND MANAGER"
+        : isAdminWorker
+        ? "ADMIN WORKER"
+        : "PUBLIC";
+
+    const title = computed(() => getTitle());
 
     return {
       isProduction,

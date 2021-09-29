@@ -113,12 +113,14 @@
           <p>{{ errorMessage }}</p>
         </template>
         <template #footer>
-          <base-button class="ml-2" @click="showError = false">
+          <base-button status="success" class="ml-2" @click="showError = false">
             OK
           </base-button>
         </template>
       </base-dialog>
-      <base-button class="w-full" @click="submit">Submit</base-button>
+      <base-button status="success" class="w-full" @click="submit"
+        >Submit</base-button
+      >
     </form>
   </div>
 </template>
