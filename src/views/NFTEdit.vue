@@ -4,97 +4,105 @@
       <ArrowLeftIcon class="h-8 w-8 text-gray-700" />
     </a>
     <hr class="clear-both my-6 border-none" />
-    <form
-      v-if="data.formData.details"
-      class="w-full max-w-lg space-y-5 mx-auto"
-    >
+    <form class="w-full max-w-lg space-y-5 mx-auto">
+      <div>
+        <base-input
+          id="token_name"
+          v-model="v$.token_name.$model"
+          label-text="token_name"
+          type="text"
+          placeholder="Media ID"
+          :errors="formatVuelidateErrors(v$.token_name.$errors)"
+        ></base-input>
+      </div>
       <div>
         <base-input
           id="title"
-          v-model="data.formData.details.title"
+          v-model="formData.title"
           label-text="title"
           type="text"
           placeholder="Title"
+          :errors="formatVuelidateErrors(v$.title.$errors)"
         ></base-input>
       </div>
-      <div v-if="data.formData.earn">
+      <div>
         <base-input
           id="subtitle"
-          v-model="data.formData.details.subtitle"
+          v-model="formData.subtitle"
           label-text="subtitle"
           type="text"
-          placeholder="Subtitile"
+          placeholder="subtitle"
+          :errors="formatVuelidateErrors(v$.subtitle.$errors)"
         ></base-input>
       </div>
       <div>
         <base-input
-          id="mediaID"
-          v-model="data.formData.mediaID"
-          label-text="mediaID"
+          id="mediaurl"
+          v-model="formData.mediaurl"
+          label-text="mediaurl"
           type="text"
-          placeholder="Media ID"
+          placeholder="mediaurl"
+          :errors="formatVuelidateErrors(v$.mediaurl.$errors)"
         ></base-input>
       </div>
       <div>
-        <base-input
-          id="walletAddress"
-          v-model="data.formData.publisher.walletAddress"
-          label-text="walletAddress"
-          type="text"
-          placeholder="Publisher walletAddress"
-        ></base-input>
+        <base-text-area
+          id="description"
+          v-model="formData.description"
+          label-text="description"
+          placeholder="Publisher description"
+          :errors="formatVuelidateErrors(v$.description.$errors)"
+        ></base-text-area>
       </div>
-      <div v-if="data.formData.earn">
+      <div>
         <base-input
-          id="moreInfo"
-          v-model="data.formData.details.moreInfo"
-          label-text="moreInfo"
+          id="brand_name"
+          v-model="formData.brand_name"
+          label-text="brand_name"
           type="text"
-          placeholder="More Info Link"
-        ></base-input>
-      </div>
-      <div
-        v-if="data.formData.list && !data.formData.earn"
-        class="flex justify-between w-full"
-      >
-        <base-checkbox
-          id="highlighted"
-          v-model="data.formData.list.highlighted"
-          text="Is highlighted"
-          label-text="highlighted"
-        ></base-checkbox>
-        <base-input
-          id="order"
-          v-model="data.formData.list.order"
-          label-text="order"
-          type="number"
-          placeholder="Order"
+          placeholder="brand_name"
+          :errors="formatVuelidateErrors(v$.brand_name.$errors)"
         ></base-input>
       </div>
       <div>
         <base-multi-select
-          v-model="data.formData.categories"
-          :options="data.formData.categories"
+          v-model="formData.categories"
           name="categories"
           label-text="categories"
+          label="value"
+          :errors="
+            v$.categories.$errors &&
+            formatVuelidateErrors(v$.categories.$errors)
+          "
         ></base-multi-select>
       </div>
-      <div v-if="data.formData.details.twitter">
+      <div>
         <base-multi-select
-          v-model="data.formData.details.twitter.hashtags"
-          :options="data.formData.details.twitter.hashtags"
-          name="hashtags"
-          label-text="hashtags"
+          v-model="formData.tags"
+          name="tags"
+          label-text="tags"
+          :errors="v$.tags.$errors && formatVuelidateErrors(v$.tags.$errors)"
         ></base-multi-select>
       </div>
-      <base-button class="w-full" @click="submit">Submit</base-button>
+      <div>
+        <base-checkbox
+          id="transferable_copyright"
+          v-model="formData.transferable_copyright"
+          text="Is transferable_copyright"
+          label-text="transferable_copyright"
+          :errors="
+            v$.transferable_copyright.$errors &&
+            formatVuelidateErrors(v$.transferable_copyright.$errors)
+          "
+        ></base-checkbox>
+      </div>
       <base-dialog
         :show="showSuccess"
         title="Success"
         @close="showSuccess = false"
       >
         <template #body>
-          <p>Media updated successfully</p>
+          <p>Media added successfully</p>
         </template>
         <template #footer>
           <base-button class="ml-2" @click="pushToMediaList"> OK </base-button>
@@ -105,11 +113,14 @@
           <p>{{ errorMessage }}</p>
         </template>
         <template #footer>
-          <base-button class="ml-2" @click="showError = false">
+          <base-button status="success" class="ml-2" @click="showError = false">
             OK
           </base-button>
         </template>
       </base-dialog>
+      <base-button status="info" class="w-full" @click="submit"
+        >Update</base-button
+      >
     </form>
   </div>
 </template>
@@ -120,11 +131,14 @@ import BaseButton from "../components/BaseButton.vue";
 import BaseCheckbox from "../components/BaseCheckbox.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, computed } from "vue";
 import MediaService from "../services/MediaService";
 import { ArrowLeftIcon } from "@heroicons/vue/solid";
 import { Media } from "../models/Media";
 import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { required, url, maxLength } from "@vuelidate/validators";
 
 function formatArraysString(arrayString: string | string[]) {
   if (arrayString && arrayString.length) {
@@ -149,53 +163,40 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const data = reactive<{ formData: Media }>({
-      formData: {
-        earn: false,
-        publisher: { walletAddress: "" },
-        mediaID: "",
-        list: { highlighted: false },
-        categories: [],
-        details: {
-          title: "",
-          twitter: {
-            hashtags: [],
-          },
-        },
-      },
-    });
+    const store = useStore();
+    const nft = store.getters["nft/getById"](route.params.nftId);
+    console.log(nft);
+    const formData = reactive(nft.details);
+    console.log(formData);
+
     const showError = ref(false);
     const errorMessage = ref<string>("");
     const showSuccess = ref(false);
-    const selectedTags = ref(["first", "second"]);
-    const categoriesOptions = ref([
-      "first",
-      "second",
-      "third",
-      "fourth",
-      "fifth",
-    ]);
-    (async () => {
-      if (route.params.mediaID) {
-        data.formData = await MediaService.find(String(route.params.mediaID));
-        data.formData.categories = data.formData.mediaCategories?.map(
-          (c) => c.name
-        );
-      }
-    })();
+    const rules = computed(() => ({
+      title: { required },
+      token_name: { required, maxLength: maxLength(40) },
+      subtitle: {},
+      description: {},
+      brand_name: {
+        required,
+      },
+      transferable_copyright: { required },
+      mediaurl: { required, url },
+      tags: { required },
+      categories: { required },
+    }));
+    const v$ = useVuelidate(rules, formData, { $autoDirty: true });
 
     return {
-      data,
+      formData,
       showSuccess,
       showError,
       errorMessage,
-      selectedTags,
-      categoriesOptions,
+      v$,
       async submit(event: Event) {
         event.preventDefault();
         try {
           const toUpdate = JSON.parse(JSON.stringify(data));
-
           const updatedMedia: Media = {
             publisher: {
               walletAddress: toUpdate.formData.publisher.walletAddress,
@@ -231,8 +232,12 @@ export default defineComponent({
           showError.value = true;
         }
       },
+      formatVuelidateErrors(errors: any[]) {
+        return errors.map((error) => {
+          return { text: error.$message, key: error.$uid };
+        });
+      },
       pushToMediaList() {
-        showSuccess.value = false;
         router.go(-1);
       },
     };

@@ -179,10 +179,9 @@ export default defineComponent({
     const showError = ref(false);
     const errorMessage = ref<string>("");
     const showSuccess = ref(false);
-    // brand/manager brand/worker
     const rules = computed(() => ({
       title: { required },
-      token_name: { required, maxLength: maxLength(40) }, //max 40 chatracters
+      token_name: { required, maxLength: maxLength(40) },
       subtitle: {},
       description: {},
       brand_name: {

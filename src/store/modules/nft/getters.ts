@@ -6,6 +6,10 @@ const getAll = (state: NFTState): Array<NFT> =>
 export default {
   getAll,
   getTotal: (state: NFTState): number => state.totalItems,
+  getById:
+    (state: NFTState) =>
+    (id: string): NFT | undefined =>
+      getAll(state).find((n) => n.id == id),
   getQuery: (state: NFTState): Record<string, string | number> => state.query,
   byTitle:
     (state: NFTState) =>

@@ -32,7 +32,7 @@
         right-10
         shadow-xl
       "
-      :to="{ path: '/media/add' }"
+      :to="{ path: '/nft/add' }"
     >
       <PlusIcon class="h-8 w-8 text-white" />
     </router-link>

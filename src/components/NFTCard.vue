@@ -104,9 +104,19 @@
       </div>
     </div>
     <div
-      v-if="canDelete || canApprove || canClaim || canReject || canIssue"
+      v-if="
+        canDelete ||
+        canApprove ||
+        canClaim ||
+        canReject ||
+        canIssue ||
+        canUpdate
+      "
       class="border-t-2 p-4 flex justify-end"
     >
+      <base-button v-if="canUpdate" class="mr-2" status="info" @click="editNFT"
+        >Edit</base-button
+      >
       <base-button
         v-if="canDelete"
         class="mr-2"
@@ -166,6 +176,7 @@ import BaseButton from "../components/BaseButton.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import { PropType } from "vue";
 import { NFT } from "../models/NFT";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { ref, defineComponent } from "vue";
 import webSocket from "../utils/websocketAdaptor";
@@ -189,6 +200,7 @@ export default defineComponent({
   },
   setup: (props) => {
     const store = useStore();
+    const router = useRouter();
     const isDeleteDialogOpen = ref(false);
     const showQRCode = ref(false);
     const invalidQR = ref(false);
@@ -251,9 +263,19 @@ export default defineComponent({
         await store.dispatch("nft/claim", props.nft);
         showQRCode.value = true;
       },
+      editNFT() {
+        router.push({ path: `/nft/edit/${props.nft.id}` });
+      },
     };
   },
   computed: {
+    canUpdate(): boolean {
+      // return (
+      //   ["created", "rejected"].includes(this.nft.current_status) &&
+      //   withRole(["brand/worker"])
+      // );
+      return true;
+    },
     canDelete(): boolean {
       return (
         ["created", "rejected"].includes(this.nft.current_status) &&
