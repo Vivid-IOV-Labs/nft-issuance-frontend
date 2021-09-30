@@ -273,11 +273,10 @@ export default defineComponent({
   },
   computed: {
     canUpdate(): boolean {
-      // return (
-      //   ["created", "rejected"].includes(this.nft.current_status) &&
-      //   withRole(["brand/worker"])
-      // );
-      return true;
+      return (
+        ["created", "rejected"].includes(this.nft.current_status) &&
+        withRole(["brand/worker"])
+      );
     },
     canDelete(): boolean {
       return (
@@ -293,8 +292,10 @@ export default defineComponent({
     },
     canReject(): boolean {
       return (
-        ["created"].includes(this.nft.current_status) &&
-        withRole(["admin/worker", "brand/manager"])
+        (["created"].includes(this.nft.current_status) &&
+          withRole(["brand/manager"])) ||
+        (["approved"].includes(this.nft.current_status) &&
+          withRole(["admin/worker"]))
       );
     },
     canIssue(): boolean {

@@ -132,25 +132,12 @@ import BaseCheckbox from "../components/BaseCheckbox.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
 import { defineComponent, reactive, ref, computed } from "vue";
-import MediaService from "../services/MediaService";
 import { ArrowLeftIcon } from "@heroicons/vue/solid";
-import { Media } from "../models/Media";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required, url, maxLength } from "@vuelidate/validators";
 
-function formatArraysString(arrayString: string | string[]) {
-  if (arrayString && arrayString.length) {
-    if (Array.isArray(arrayString)) {
-      return arrayString;
-    } else {
-      return arrayString.split(",");
-    }
-  } else {
-    return [];
-  }
-}
 export default defineComponent({
   components: {
     BaseInput,
@@ -198,8 +185,8 @@ export default defineComponent({
         const isFormCorrect = await v$.value.$validate();
         if (!isFormCorrect) return;
         try {
-          // await store.dispatch("nft/create", formData);
-          // showSuccess.value = true;
+          await store.dispatch("nft/update", { id: nft, details: formData });
+          showSuccess.value = true;
         } catch (error) {
           console.log(error);
           // errorMessage.value = String(message);

@@ -70,7 +70,7 @@ async function find(mediaID: string): Promise<NFT> {
   return media;
 }
 
-async function update(mediaToUpdate: NFT): Promise<NFT> {
+async function update(mediaToUpdate: NFT["details"]): Promise<NFT> {
   const {
     data: { media: updatedMedia },
   } = await ApiService.patch(`${API_ENDPOINT}`, {
