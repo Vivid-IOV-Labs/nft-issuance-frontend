@@ -5,12 +5,42 @@ import { NFT } from "../../../models/NFT";
 interface MediaState {
   all: Array<NFT>;
 }
+import {
+  isBrandWorker,
+  isBrandManager,
+  isAdminWorker,
+} from "../../../utils/auth";
+
+const all = JSON.stringify([
+  "created",
+  "approved",
+  "rejected",
+  "issued",
+  "claimed",
+  "delivered",
+]);
+
+const canSee = () =>
+  isBrandWorker
+    ? all
+    : isBrandManager
+    ? all
+    : isAdminWorker
+    ? all
+    : JSON.stringify(["issued", "claimed"]);
 
 const actions: ActionTree<NFT, MediaState> = {
   async fetchAll({ commit }, params): Promise<void> {
-    const { media, total } = await NFTService.list(params);
+    const { media, total } = await NFTService.list({
+      ...params,
+      status: canSee(),
+    });
     commit("setAll", media);
     commit("setTotalItems", total);
+  },
+  async fetchById({ commit }, id): Promise<void> {
+    const nft = await NFTService.findById(id);
+    commit("setCurrent", nft);
   },
   setQuery({ commit }, query) {
     commit("setQuery", query);
@@ -26,6 +56,10 @@ const actions: ActionTree<NFT, MediaState> = {
   async approve({ commit }, NFT: NFT): Promise<void> {
     const approvedNFT = await NFTService.approve(NFT);
     commit("set", approvedNFT);
+  },
+  async reject({ commit }, NFT: NFT): Promise<void> {
+    const rejectedNFT = await NFTService.reject(NFT);
+    commit("set", rejectedNFT);
   },
   async issue({ commit }, NFT: NFT): Promise<void> {
     const issuedNFT = await NFTService.issue(NFT);

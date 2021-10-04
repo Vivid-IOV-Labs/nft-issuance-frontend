@@ -6,6 +6,9 @@ const mutations: MutationTree<NFTState> = {
   setAll(state: NFTState, all: Array<NFT>): void {
     state.all = all;
   },
+  setCurrent(state: NFTState, current: NFT): void {
+    state.current = current;
+  },
   setTotalItems(state: NFTState, total: number): void {
     state.totalItems = total;
   },

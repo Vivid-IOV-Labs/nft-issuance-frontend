@@ -147,11 +147,14 @@ export default defineComponent({
     ArrowLeftIcon,
     BaseMultiSelect,
   },
-  setup() {
+  async setup() {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
-    const nft = store.getters["nft/getById"](route.params.nftId);
+    const show = ref(false);
+    await store.dispatch("nft/fetchById", route.params.nftId);
+    show.value = true;
+    const nft = store.getters["nft/getCurrent"];
     console.log(nft);
     const formData = reactive(nft.details);
     console.log(formData);
@@ -176,6 +179,7 @@ export default defineComponent({
 
     return {
       formData,
+      show,
       showSuccess,
       showError,
       errorMessage,

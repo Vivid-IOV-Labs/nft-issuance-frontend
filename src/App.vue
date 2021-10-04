@@ -1,7 +1,44 @@
 <template>
   <div v-if="withAuthLayout">
     <auth-layout>
-      <router-view></router-view>
+      <RouterView v-slot="{ Component, route }" name="default">
+        <transition
+          :key="route.path"
+          :name="route.meta.transition"
+          mode="out-in"
+          :duration="300"
+        >
+          <Suspense>
+            <template #default>
+              <component :is="Component" :key="route.path" />
+            </template>
+            <template #fallback>
+              <div
+                class="
+                  top-0
+                  right-0
+                  h-screen
+                  w-screen
+                  z-50
+                  flex
+                  justify-center
+                  items-center
+                "
+              >
+                <div
+                  class="
+                    animate-spin
+                    rounded-full
+                    h-32
+                    w-32
+                    border-t-2 border-b-2 border-green-700
+                  "
+                ></div>
+              </div>
+            </template>
+          </Suspense>
+        </transition>
+      </RouterView>
     </auth-layout>
   </div>
   <div v-else class="container px-6 pt-4 pb-6 h-screen">

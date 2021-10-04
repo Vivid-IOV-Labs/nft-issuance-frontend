@@ -41,6 +41,13 @@ async function approve(NFT: NFT): Promise<ResponseNFT> {
   return approvedNFT;
 }
 
+async function reject(NFT: NFT): Promise<ResponseNFT> {
+  const {
+    data: { nft: rejectedNFT },
+  } = await ApiService.post(`${API_ENDPOINT}/reject`, NFT);
+  return rejectedNFT;
+}
+
 async function issue(NFT: NFT): Promise<ResponseNFT> {
   const {
     data: { nft: issuedNFT },
@@ -61,13 +68,11 @@ async function remove(mediaID: string): Promise<void> {
   });
 }
 
-async function find(mediaID: string): Promise<NFT> {
+async function findById(id: string): Promise<NFT> {
   const {
-    data: { media },
-  } = await ApiService.get(`${API_ENDPOINT}`, {
-    params: { mediaID },
-  });
-  return media;
+    data: { nft },
+  } = await ApiService.get(`${API_ENDPOINT}/${id}`);
+  return nft;
 }
 
 async function update(mediaToUpdate: NFT["details"]): Promise<NFT> {
@@ -88,4 +93,6 @@ export default {
   update,
   issue,
   claim,
+  reject,
+  findById,
 };

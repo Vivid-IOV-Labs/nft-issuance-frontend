@@ -10,6 +10,7 @@ export default {
     (state: NFTState) =>
     (id: string): NFT | undefined =>
       getAll(state).find((n) => n.id == id),
+  getCurrent: (state: NFTState): NFT | undefined => state.current,
   getQuery: (state: NFTState): Record<string, string | number> => state.query,
   byTitle:
     (state: NFTState) =>

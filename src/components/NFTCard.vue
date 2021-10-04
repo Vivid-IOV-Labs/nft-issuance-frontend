@@ -152,7 +152,7 @@
         v-if="canReject"
         class="mr-2"
         status="warning"
-        @click="deleteNFT"
+        @click="rejectNFT"
         >Reject</base-button
       >
     </div>
@@ -258,6 +258,9 @@ export default defineComponent({
       },
       approveNFT(): void {
         store.dispatch("nft/approve", props.nft);
+      },
+      rejectNFT(): void {
+        store.dispatch("nft/reject", props.nft);
       },
       issueNFT(): void {
         store.dispatch("nft/issue", props.nft);
