@@ -181,7 +181,7 @@ export default defineComponent({
     const showSuccess = ref(false);
     const rules = computed(() => ({
       title: { required },
-      token_name: { required, maxLength: maxLength(40) },
+      token_name: { required, maxLength: maxLength(38) },
       subtitle: {},
       description: {},
       brand_name: {
