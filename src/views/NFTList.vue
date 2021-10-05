@@ -59,10 +59,16 @@ export default defineComponent({
     PlusIcon,
     BaseInput,
   },
-  setup: () => {
+  async setup() {
     const store = useStore();
     const route = useRoute();
-
+    await store.dispatch("nft/fetchAll", route.query);
+    // watch(
+    //   () => route.query,
+    //   async () => {
+    //     await store.dispatch("nft/fetchAll", route.query);
+    //   }
+    // );
     const searchByTitle = ref("");
     const allNFT = computed(() => {
       return store.getters["nft/byTitle"](searchByTitle.value);
@@ -71,13 +77,6 @@ export default defineComponent({
       return withRole(["brand/worker"]);
     });
 
-    store.dispatch("nft/fetchAll", route.query);
-    watch(
-      () => route.query,
-      async () => {
-        await store.dispatch("nft/fetchAll", route.query);
-      }
-    );
     return { allNFT, searchByTitle, canCreate };
   },
 });

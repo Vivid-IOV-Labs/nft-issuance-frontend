@@ -1,7 +1,6 @@
 import { NFTState } from "./state";
 import { NFT } from "../../../models/NFT";
-const getAll = (state: NFTState): Array<NFT> =>
-  state.all.filter((nft) => nft.current_status !== "delivered");
+const getAll = (state: NFTState): Array<NFT> => state.all;
 
 export default {
   getAll,
