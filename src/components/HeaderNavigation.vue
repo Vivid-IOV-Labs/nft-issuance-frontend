@@ -27,14 +27,30 @@
       <ul class="flex items-center">
         <!-- add button -->
         <li>
-          <h1 class="pl-8 lg:pl-0 uppercase font-semibold text-lg">
-            {{ title }}
-          </h1>
+          <h1
+            v-t="'message.welcome'"
+            class="pl-8 lg:pl-0 uppercase font-semibold text-lg"
+          ></h1>
         </li>
       </ul>
 
       <!-- to bar right  -->
       <div class="flex items-center">
+        <div>
+          <div>
+            <a v-if="$i18n.locale !== 'de'" @click="changeLanguage('de')">DE</a>
+            <strong v-if="$i18n.locale === 'de'">DE</strong>
+            &nbsp;|&nbsp;
+            <a v-if="$i18n.locale !== 'el'" @click="changeLanguage('el')">EL</a>
+            <strong v-if="$i18n.locale === 'el'">EL</strong>
+            &nbsp;|&nbsp;
+            <a v-if="$i18n.locale !== 'it'" @click="changeLanguage('it')">IT</a>
+            <strong v-if="$i18n.locale === 'it'">IT</strong>
+            &nbsp;|&nbsp;
+            <a v-if="$i18n.locale !== 'en'" @click="changeLanguage('en')">EN</a>
+            <strong v-if="$i18n.locale === 'en'">EN</strong>
+          </div>
+        </div>
         <base-button
           v-if="route.path == '/media'"
           class="pr-6 uppercase text-lg ml-2"
@@ -44,6 +60,7 @@
         </base-button>
       </div>
     </nav>
+    <pre>{{ $i18n }}</pre>
   </div>
 </template>
 <script lang="ts">
@@ -105,6 +122,13 @@ export default defineComponent({
         router.push({ path: "/" });
       },
     };
+  },
+  methods: {
+    changeLanguage(lang: string) {
+      console.log(this.$i18n.locale);
+      this.$i18n.locale = lang;
+      console.log(this.$i18n.locale);
+    },
   },
 });
 </script>
