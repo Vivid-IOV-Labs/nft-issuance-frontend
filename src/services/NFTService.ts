@@ -64,7 +64,7 @@ async function claim(NFT: NFT): Promise<ResponseNFT> {
 
 async function remove(ids: string[]): Promise<void> {
   await ApiService.delete(`${API_ENDPOINT}`, {
-    params: { id: ids },
+    data: { id: ids },
   });
 }
 

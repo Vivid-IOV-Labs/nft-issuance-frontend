@@ -124,7 +124,7 @@
         v-if="canDelete"
         class="mr-2"
         status="danger"
-        @click="deleteNFT"
+        @click="confirmDeleteNFT"
         >Delete</base-button
       >
       <base-button
@@ -167,9 +167,7 @@
         </p>
       </template>
       <template #footer>
-        <base-button class="ml-2" @click="isDeleteDialogOpen = false">
-          Delete
-        </base-button>
+        <base-button class="ml-2" @click="deleteNFT"> Delete </base-button>
       </template>
     </base-dialog>
   </div>
@@ -252,9 +250,12 @@ export default defineComponent({
       fallbackImg(event: Event): void {
         (event.target as HTMLImageElement).src = "thumbnail.jpg";
       },
-      deleteNFT(): void {
+      confirmDeleteNFT() {
         isDeleteDialogOpen.value = true;
-        console.log(213);
+      },
+      async deleteNFT(): Promise<void> {
+        await store.dispatch("nft/remove", [props.nft.id]);
+        isDeleteDialogOpen.value = false;
       },
       approveNFT(): void {
         store.dispatch("nft/approve", props.nft);

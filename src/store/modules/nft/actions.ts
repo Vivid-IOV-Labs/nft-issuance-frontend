@@ -69,9 +69,9 @@ const actions: ActionTree<NFT, MediaState> = {
     const claimedNFT = await NFTService.claim(NFT);
     commit("set", claimedNFT);
   },
-  async remove({ commit }, mediaID: string): Promise<void> {
-    await NFTService.remove(mediaID);
-    commit("remove", mediaID);
+  async remove({ commit }, ids: string[]): Promise<void> {
+    await NFTService.remove(ids);
+    commit("remove", ids);
   },
 };
 export default actions;
