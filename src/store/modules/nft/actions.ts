@@ -49,8 +49,8 @@ const actions: ActionTree<NFT, MediaState> = {
     const newAddedMedia = await NFTService.create(newNFTH);
     commit("add", newAddedMedia);
   },
-  async update({ commit }, updatesNFT: NFT["details"]): Promise<void> {
-    const updatedNFT = await NFTService.update(updatesNFT);
+  async update({ commit }, { details, id }): Promise<void> {
+    const updatedNFT = await NFTService.update(details, id);
     commit("set", updatedNFT);
   },
   async approve({ commit }, NFT: NFT): Promise<void> {

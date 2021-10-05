@@ -189,7 +189,7 @@ export default defineComponent({
         const isFormCorrect = await v$.value.$validate();
         if (!isFormCorrect) return;
         try {
-          await store.dispatch("nft/update", { id: nft, details: formData });
+          await store.dispatch("nft/update", { id: nft.id, details: formData });
           showSuccess.value = true;
         } catch (error) {
           console.log(error);

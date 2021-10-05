@@ -62,9 +62,9 @@ async function claim(NFT: NFT): Promise<ResponseNFT> {
   return claimedNFT;
 }
 
-async function remove(mediaID: string): Promise<void> {
+async function remove(ids: string[]): Promise<void> {
   await ApiService.delete(`${API_ENDPOINT}`, {
-    params: { mediaID },
+    params: { id: ids },
   });
 }
 
@@ -75,13 +75,16 @@ async function findById(id: string): Promise<NFT> {
   return nft;
 }
 
-async function update(mediaToUpdate: NFT["details"]): Promise<NFT> {
+async function update(
+  nftToUpdate: NFT["details"],
+  id: NFT["id"]
+): Promise<NFT> {
   const {
-    data: { media: updatedMedia },
-  } = await ApiService.patch(`${API_ENDPOINT}`, {
-    ...mediaToUpdate,
+    data: { nft: updatedNFT },
+  } = await ApiService.patch(`${API_ENDPOINT}?id=${id}`, {
+    details: nftToUpdate,
   });
-  return updatedMedia;
+  return updatedNFT;
 }
 
 export default {
@@ -89,7 +92,6 @@ export default {
   create,
   approve,
   remove,
-  find,
   update,
   issue,
   claim,
