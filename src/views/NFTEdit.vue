@@ -1,9 +1,11 @@
 <template>
   <div class="p-2">
     <a href="#" class="block float-right" @click="pushToMediaList">
-      <ArrowLeftIcon class="h-8 w-8 text-gray-700" />
+      <arrow-left-icon class="h-8 w-8 text-gray-700" />
     </a>
     <hr class="clear-both my-6 border-none" />
+    {{ v$.token_name.$model }}
+    <pre>{{ v$.token_name.$errors }}</pre>
     <form class="w-full max-w-lg space-y-5 mx-auto">
       <div>
         <base-input
@@ -37,12 +39,12 @@
       </div>
       <div>
         <base-input
-          id="mediaurl"
-          v-model="formData.mediaurl"
-          label-text="mediaurl"
+          id="media_url"
+          v-model="formData.media_url"
+          label-text="media_url"
           type="text"
-          placeholder="mediaurl"
-          :errors="formatVuelidateErrors(v$.mediaurl.$errors)"
+          placeholder="media_url"
+          :errors="formatVuelidateErrors(v$.media_url.$errors)"
         ></base-input>
       </div>
       <div>
@@ -127,16 +129,18 @@
 
 <script lang="ts">
 import BaseInput from "@/components/BaseInput.vue";
+import BaseTextArea from "@/components/BaseTextArea.vue";
 import BaseButton from "../components/BaseButton.vue";
 import BaseCheckbox from "../components/BaseCheckbox.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
-import { defineComponent, reactive, ref, computed } from "vue";
+import { defineComponent, reactive, ref, computed, toRef } from "vue";
 import { ArrowLeftIcon } from "@heroicons/vue/solid";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required, url, maxLength } from "@vuelidate/validators";
+import NFTService from "../services/NFTService";
 
 export default defineComponent({
   components: {
@@ -146,40 +150,53 @@ export default defineComponent({
     BaseDialog,
     ArrowLeftIcon,
     BaseMultiSelect,
+    BaseTextArea,
   },
   async setup() {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
-    const show = ref(false);
-    await store.dispatch("nft/fetchById", route.params.nftId);
-    show.value = true;
-    const nft = store.getters["nft/getCurrent"];
-    console.log(nft);
+    // const await store.dispatch("nft/fetchById", route.params.nftId);
+    // const nft = store.getters["nft/getCurrent"];
+    const nft = await NFTService.findById(route.params.nftId as string);
+
     const formData = reactive(nft.details);
-    console.log(formData);
 
     const showError = ref(false);
     const errorMessage = ref<string>("");
     const showSuccess = ref(false);
     const rules = computed(() => ({
       title: { required },
-      token_name: { required, maxLength: maxLength(38) },
+      token_name: { required },
       subtitle: {},
       description: {},
       brand_name: {
         required,
       },
       transferable_copyright: { required },
-      mediaurl: { required, url },
+      media_url: { required, url },
       tags: { required },
       categories: { required },
     }));
-    const v$ = useVuelidate(rules, formData, { $autoDirty: true });
+
+    const v$ = useVuelidate(
+      rules,
+      {
+        title: toRef(formData, "title"),
+        token_name: toRef(formData, "token_name"),
+        subtitle: toRef(formData, "subtitle"),
+        description: toRef(formData, "description"),
+        brand_name: toRef(formData, "brand_name"),
+        transferable_copyright: toRef(formData, "transferable_copyright"),
+        media_url: toRef(formData, "media_url"),
+        tags: toRef(formData, "tags"),
+        categories: toRef(formData, "categories"),
+      },
+      { $autoDirty: true }
+    );
 
     return {
       formData,
-      show,
       showSuccess,
       showError,
       errorMessage,

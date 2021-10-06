@@ -63,9 +63,12 @@ async function claim(NFT: NFT): Promise<ResponseNFT> {
 }
 
 async function remove(ids: string[]): Promise<void> {
-  await ApiService.delete(`${API_ENDPOINT}`, {
-    data: { id: ids },
-  });
+  await ApiService.delete(
+    `${API_ENDPOINT}?id=[${ids.join(",")}]`
+    // , {
+    //   params: { id: ids },
+    // }
+  );
 }
 
 async function findById(id: string): Promise<NFT> {
@@ -79,6 +82,7 @@ async function update(
   nftToUpdate: NFT["details"],
   id: NFT["id"]
 ): Promise<NFT> {
+  console.log(nftToUpdate, id);
   const {
     data: { nft: updatedNFT },
   } = await ApiService.patch(`${API_ENDPOINT}?id=${id}`, {

@@ -16,6 +16,7 @@
     "@vuelidate/validators": "^2.0.0-alpha.17",
     "axios": "^0.21.1",
     "ethers": "^5.4.0",
+    "locizer": "^3.3.1",
     "sails.io.js": "^1.2.1",
     "socket.io-client": "^2.4.0",
     "vue": "^3.0.5",

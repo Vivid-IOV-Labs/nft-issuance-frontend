@@ -167,7 +167,9 @@
         </p>
       </template>
       <template #footer>
-        <base-button class="ml-2" @click="deleteNFT"> Delete </base-button>
+        <base-button status="danger" class="ml-2" @click="deleteNFT">
+          Delete
+        </base-button>
       </template>
     </base-dialog>
   </div>
@@ -253,9 +255,9 @@ export default defineComponent({
       confirmDeleteNFT() {
         isDeleteDialogOpen.value = true;
       },
-      async deleteNFT(): Promise<void> {
-        await store.dispatch("nft/remove", [props.nft.id]);
+      deleteNFT(): void {
         isDeleteDialogOpen.value = false;
+        store.dispatch("nft/remove", [props.nft.id]);
       },
       approveNFT(): void {
         store.dispatch("nft/approve", props.nft);
@@ -329,7 +331,7 @@ export default defineComponent({
       return this.nft.details.token_name;
     },
     posterUrl(): string {
-      return this.nft.details.mediaurl;
+      return this.nft.details.media_url;
     },
     title(): string {
       if (this.nft && this.nft.details && this.nft.details.title) {

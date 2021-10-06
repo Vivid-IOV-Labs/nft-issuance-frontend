@@ -30,7 +30,7 @@ export interface NFT {
     subtitle?: string;
     description?: string;
     tags?: string[];
-    mediaurl: string;
+    media_url: string;
     categories: Category[];
     brand_name: string;
     transferable_copyright: boolean;

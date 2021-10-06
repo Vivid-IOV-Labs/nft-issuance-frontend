@@ -27,13 +27,13 @@
       <ul class="flex items-center">
         <!-- add button -->
         <li>
-          <h1
-            v-t="'message.welcome'"
-            class="pl-8 lg:pl-0 uppercase font-semibold text-lg"
-          ></h1>
+          <h1 class="pl-8 lg:pl-0 uppercase font-semibold text-lg">
+            {{ title }}
+          </h1>
         </li>
       </ul>
 
+      <!-- to bar right  -->
       <!-- to bar right  -->
       <div class="flex items-center">
         <div>
@@ -60,7 +60,6 @@
         </base-button>
       </div>
     </nav>
-    <pre>{{ $i18n }}</pre>
   </div>
 </template>
 <script lang="ts">
@@ -122,13 +121,6 @@ export default defineComponent({
         router.push({ path: "/" });
       },
     };
-  },
-  methods: {
-    changeLanguage(lang: string) {
-      console.log(this.$i18n.locale);
-      this.$i18n.locale = lang;
-      console.log(this.$i18n.locale);
-    },
   },
 });
 </script>

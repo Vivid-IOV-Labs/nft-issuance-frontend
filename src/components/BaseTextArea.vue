@@ -47,10 +47,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
     placeholder: {
       type: String,
       required: true,

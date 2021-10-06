@@ -27,7 +27,7 @@ const mutations: MutationTree<NFTState> = {
     state.all = [newMedia, ...state.all];
   },
   remove(state: NFTState, ids: string[]): void {
-    state.all = state.all.filter((media) => ids.includes(media.id));
+    state.all = state.all.filter((nft) => ids.includes(nft.id));
   },
   setStatus(state: NFTState, { id, status }): void {
     const index = state.all.findIndex((nft) => {

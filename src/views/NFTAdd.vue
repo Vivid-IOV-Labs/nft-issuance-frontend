@@ -37,12 +37,12 @@
       </div>
       <div>
         <base-input
-          id="mediaurl"
-          v-model="formData.mediaurl"
-          label-text="mediaurl"
+          id="media_url"
+          v-model="formData.media_url"
+          label-text="media_url"
           type="text"
-          placeholder="mediaurl"
-          :errors="formatVuelidateErrors(v$.mediaurl.$errors)"
+          placeholder="media_url"
+          :errors="formatVuelidateErrors(v$.media_url.$errors)"
         ></base-input>
       </div>
       <div>
@@ -170,7 +170,7 @@ export default defineComponent({
       subtitle: "",
       description: "",
       tags: [],
-      mediaurl: "",
+      media_url: "",
       categories: [],
       brand_name: "",
       transferable_copyright: false,
@@ -188,7 +188,7 @@ export default defineComponent({
         required,
       },
       transferable_copyright: { required },
-      mediaurl: { required, url },
+      media_url: { required, url },
       tags: { required },
       categories: { required },
     }));

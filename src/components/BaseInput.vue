@@ -15,7 +15,12 @@
       v-bind="$attrs"
       @input="handleChange"
     />
-    <base-alert v-if="errors.length" :messages="errors" class="input-errors">
+    <base-alert
+      v-if="errors.length"
+      :messages="errors"
+      status="danger"
+      class="input-errors"
+    >
     </base-alert>
   </div>
 </template>
@@ -66,6 +71,7 @@ export default defineComponent({
   methods: {
     handleChange(event: Event): void {
       const value = getValue(event);
+      console.log(value);
       this.$emit("update:modelValue", value);
     },
   },
