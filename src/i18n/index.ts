@@ -13,7 +13,7 @@ export const i18n = createI18n({
   fallbackLocale: "en",
 });
 export const loadMessagesPromise = new Promise((resolve, reject) => {
-  locizer.loadAll(namespace, (err: string, messages: string) => {
+  locizer.loadAll(namespace, (err:Record<string,string>, messages:Record<string,string>) => {
     if (err) return reject(err);
     Object.keys(messages).forEach((l) => {
       i18n.global.setLocaleMessage(l, messages[l]);
@@ -22,7 +22,7 @@ export const loadMessagesPromise = new Promise((resolve, reject) => {
   });
 });
 
-export function handleMissing(locale: unknown, key: unknown) {
+export function handleMissing(locale: string, key: string):void{
   if (!apiKey) return;
   if (locale !== locizer.referenceLng) return;
   locizer.add(namespace, key, key);

@@ -134,8 +134,8 @@ export default defineComponent({
     };
   },
   methods: {
-    changeLanguage(lang) {
-      this.$root.$i18n.locale = lang;
+    changeLanguage(lang:string) {
+     if(this.$root) this.$root.$i18n.locale = lang;
     },
   },
 });

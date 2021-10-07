@@ -10,7 +10,6 @@
       class="shadow-inner resize w-full text-gray-700 rounded py-3 px-4 mb-3"
       :class="{ 'border-red-500': errors.length }"
       :value="modelValue"
-      :type="type"
       :placeholder="placeholder"
       v-bind="$attrs"
       @input="handleChange"
