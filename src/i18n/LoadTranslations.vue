@@ -12,6 +12,7 @@ export default defineComponent({
   name: "LoadTranslations",
   async setup() {
     useI18n().setMissingHandler(handleMissing);
+
     await loadMessagesPromise;
     return {};
   },

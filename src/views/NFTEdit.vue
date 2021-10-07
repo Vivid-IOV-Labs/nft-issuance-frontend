@@ -4,8 +4,6 @@
       <arrow-left-icon class="h-8 w-8 text-gray-700" />
     </a>
     <hr class="clear-both my-6 border-none" />
-    {{ v$.token_name.$model }}
-    <pre>{{ v$.token_name.$errors }}</pre>
     <form class="w-full max-w-lg space-y-5 mx-auto">
       <div>
         <base-input

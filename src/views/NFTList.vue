@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col justify-center items-center mb-2">
-    <h2><span v-t="'message.welcome'"></span>!</h2>
+    <h2>
+      <span>{{ $t("welcome") }}</span>
+    </h2>
     <hr />
     <base-input
       id="search"

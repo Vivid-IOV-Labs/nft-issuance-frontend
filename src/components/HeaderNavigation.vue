@@ -37,7 +37,18 @@
       <!-- to bar right  -->
       <div class="flex items-center">
         <div>
-          <div>
+          <div class="locale-changer">
+            <select v-model="$i18n.locale">
+              <option
+                v-for="locale in $i18n.availableLocales"
+                :key="`locale-${locale}`"
+                :value="locale"
+              >
+                {{ locale }}
+              </option>
+            </select>
+          </div>
+          <!-- <div>
             <a v-if="$i18n.locale !== 'de'" @click="changeLanguage('de')">DE</a>
             <strong v-if="$i18n.locale === 'de'">DE</strong>
             &nbsp;|&nbsp;
@@ -49,7 +60,7 @@
             &nbsp;|&nbsp;
             <a v-if="$i18n.locale !== 'en'" @click="changeLanguage('en')">EN</a>
             <strong v-if="$i18n.locale === 'en'">EN</strong>
-          </div>
+          </div> -->
         </div>
         <base-button
           v-if="route.path == '/media'"
@@ -121,6 +132,11 @@ export default defineComponent({
         router.push({ path: "/" });
       },
     };
+  },
+  methods: {
+    changeLanguage(lang) {
+      this.$root.$i18n.locale = lang;
+    },
   },
 });
 </script>
