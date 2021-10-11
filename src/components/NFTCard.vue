@@ -211,12 +211,12 @@ export default defineComponent({
       props.nft.xumm &&
       props.nft.xumm.length &&
       props.nft.xumm[0].details.refs.qr_png &&
-      ["issued", "claimed"].includes(props.nft.current_status)
+      ["issued", "claiming"].includes(props.nft.current_status)
     ) {
       showQRCode.value = true;
     }
     if (
-      ["issued", "claimed"].includes(props.nft.current_status) &&
+      ["issued", "claiming"].includes(props.nft.current_status) &&
       withRole(["public"])
     ) {
       webSocket.socket.on("expired", (data) => {
@@ -241,6 +241,10 @@ export default defineComponent({
       });
       webSocket.socket.on("rejected", (data) => {
         console.log("rejected", data);
+        invalidQR.value = true;
+      });
+      webSocket.socket.on("unverified", (data) => {
+        console.log("unverified", data);
         invalidQR.value = true;
       });
     }
@@ -317,7 +321,7 @@ export default defineComponent({
     },
     canScan() {
       //onst { length, [length - 1]: last } = this.nft.xumm;
-      return ["claimed"].includes(this.nft.current_status) && this.xumnQRCode;
+      return ["claiming"].includes(this.nft.current_status) && this.xumnQRCode;
     },
     xumnQRCode(): string {
       const { length, [length - 1]: last } = this.nft.xumm;

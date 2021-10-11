@@ -24,10 +24,10 @@ const canSee = () =>
   isBrandWorker
     ? all
     : isBrandManager
-    ? all
-    : isAdminWorker
-    ? all
-    : JSON.stringify(["issued", "claimed"]);
+      ? all
+      : isAdminWorker
+        ? all
+        : JSON.stringify(["issued", "claimed"]);
 
 const actions: ActionTree<NFT, MediaState> = {
   async fetchAll({ commit }, params): Promise<void> {
