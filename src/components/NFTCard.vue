@@ -284,7 +284,7 @@ export default defineComponent({
   computed: {
     canUpdate(): boolean {
       return (
-        ["created", "rejected"].includes(this.nft.current_status) &&
+        ["created", "rejected"].includes(this.nft.current_status) && ["created",""].includes(this.nft.previous_status) && 
         withRole(["brand/worker"])
       );
     },

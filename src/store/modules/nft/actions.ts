@@ -16,7 +16,7 @@ const all = JSON.stringify([
   "approved",
   "rejected",
   "issued",
-  "claimed",
+  "claiming",
   "delivered",
 ]);
 
@@ -26,8 +26,8 @@ const canSee = () =>
     : isBrandManager
       ? all
       : isAdminWorker
-        ? all
-        : JSON.stringify(["issued", "claimed"]);
+        ? JSON.stringify(["approved", "issued", "claiming", "delivered"])
+        : JSON.stringify(["issued", "claiming"]);
 
 const actions: ActionTree<NFT, MediaState> = {
   async fetchAll({ commit }, params): Promise<void> {
