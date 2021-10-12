@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="nft.current_status !== 'delivered'"
     class="rounded-lg border bg-white shadow-lg"
   >
     <div class="w-full rounded-t-lg h-80 overflow-hidden">
@@ -14,6 +13,8 @@
         @error="fallbackImg"
       />
     </div>
+        <claiming-timeline  v-if="canScan"  :history="claimingHistory"></claiming-timeline>
+
     <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
       <a
         v-if="showQRCode && !invalidQR"
@@ -175,13 +176,14 @@
   </div>
 </template>
 <script lang="ts">
+import ClaimingTimeline from "../components/ClaimingTimeline.vue";
 import BaseButton from "../components/BaseButton.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import { PropType } from "vue";
 import { NFT } from "../models/NFT";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { ref, defineComponent } from "vue";
+import { ref, defineComponent, reactive } from "vue";
 import webSocket from "../utils/websocketAdaptor";
 import { QrcodeIcon } from "@heroicons/vue/solid";
 
@@ -192,11 +194,17 @@ function withRole(roles: string[]) {
   roles.includes(getRole() || "");
   return roles.includes(getRole() || "");
 }
+interface Status {
+  title: string;
+  message: string;
+  type: string;
+}
 export default defineComponent({
   components: {
     BaseButton,
     BaseDialog,
     QrcodeIcon,
+    ClaimingTimeline,
   },
   props: {
     nft: { type: Object as PropType<NFT>, required: true },
@@ -207,6 +215,7 @@ export default defineComponent({
     const isDeleteDialogOpen = ref(false);
     const showQRCode = ref(false);
     const invalidQR = ref(false);
+    const claimingHistory = reactive<Status[]>([]);
     if (
       props.nft.xumm &&
       props.nft.xumm.length &&
@@ -222,17 +231,34 @@ export default defineComponent({
       webSocket.socket.on("expired", (data) => {
         console.log("expired", data);
         invalidQR.value = true;
+        claimingHistory.push({
+          title: "Expired",
+          message: "expired",
+          type: "error",
+        });
       });
       webSocket.socket.on("scanned", (data) => {
-        console.log("scanned", data);
+        claimingHistory.push({
+          title: "Scanned",
+          message: "scanned suyccessfully",
+          type: "success",
+        });
       });
       webSocket.socket.on("signed", (data) => {
-        console.log("signed", data);
+        claimingHistory.push({
+          title: "signed",
+          message: "signed suyccessfully",
+          type: "success",
+        });
         store.commit("nft/setStatus", { id: props.nft.id, status: "signed" });
         invalidQR.value = true;
       });
       webSocket.socket.on("delivered", (data) => {
-        console.log("delivered", data);
+        claimingHistory.push({
+          title: "delivered",
+          message: "delivered suyccessfully",
+          type: "success",
+        });
         store.commit("nft/setStatus", {
           id: props.nft.id,
           status: "delivered",
@@ -240,11 +266,19 @@ export default defineComponent({
         invalidQR.value = true;
       });
       webSocket.socket.on("rejected", (data) => {
-        console.log("rejected", data);
+        claimingHistory.push({
+          title: "rejected",
+          message: "rejected suyccessfully",
+          type: "error",
+        });
         invalidQR.value = true;
       });
       webSocket.socket.on("unverified", (data) => {
-        console.log("unverified", data);
+        claimingHistory.push({
+          title: "unverified",
+          message: "unverified suyccessfully",
+          type: "error",
+        });
         invalidQR.value = true;
       });
     }
@@ -253,6 +287,7 @@ export default defineComponent({
       isDeleteDialogOpen,
       showQRCode,
       invalidQR,
+      claimingHistory,
       fallbackImg(event: Event): void {
         (event.target as HTMLImageElement).src = "thumbnail.jpg";
       },
@@ -284,7 +319,8 @@ export default defineComponent({
   computed: {
     canUpdate(): boolean {
       return (
-        ["created", "rejected"].includes(this.nft.current_status) && ["created",""].includes(this.nft.previous_status) && 
+        ["created", "rejected"].includes(this.nft.current_status) &&
+        ["created", ""].includes(this.nft.previous_status) &&
         withRole(["brand/worker"])
       );
     },
