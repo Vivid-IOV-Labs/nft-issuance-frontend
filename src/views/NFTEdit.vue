@@ -35,7 +35,17 @@
           :errors="formatVuelidateErrors(v$.subtitle.$errors)"
         ></base-input>
       </div>
-      <div>
+            <div>
+        <base-select
+          id="domain_protocol"
+          v-model="formData.domain_protocol"
+          label="Protocol"
+          :choices="protocols"
+          placeholder="domain_protocol"
+          :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
+        ></base-select>
+      </div>
+      <!-- <div>
         <base-input
           id="media_url"
           v-model="formData.media_url"
@@ -44,7 +54,7 @@
           placeholder="media_url"
           :errors="formatVuelidateErrors(v$.media_url.$errors)"
         ></base-input>
-      </div>
+      </div> -->
       <div>
         <base-text-area
           id="description"
@@ -132,6 +142,7 @@ import BaseButton from "../components/BaseButton.vue";
 import BaseCheckbox from "../components/BaseCheckbox.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
+import BaseSelect from "@/components/BaseSelect.vue";
 import { defineComponent, reactive, ref, computed, toRef } from "vue";
 import { ArrowLeftIcon } from "@heroicons/vue/solid";
 import { useRoute, useRouter } from "vue-router";
@@ -149,47 +160,34 @@ export default defineComponent({
     ArrowLeftIcon,
     BaseMultiSelect,
     BaseTextArea,
+    BaseSelect,
   },
   async setup() {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
-    // const await store.dispatch("nft/fetchById", route.params.nftId);
-    // const nft = store.getters["nft/getCurrent"];
     const nft = await NFTService.findById(route.params.nftId as string);
-
     const formData = reactive(nft.details);
-
     const showError = ref(false);
     const errorMessage = ref<string>("");
     const showSuccess = ref(false);
     const rules = computed(() => ({
       title: { required },
       token_name: { required },
+      domain_protocol:{required},
       subtitle: {},
       description: {},
       brand_name: {
         required,
       },
       transferable_copyright: { required },
-      media_url: { required, url },
       tags: { required },
       categories: { required },
     }));
 
     const v$ = useVuelidate(
       rules,
-      {
-        title: toRef(formData, "title"),
-        token_name: toRef(formData, "token_name"),
-        subtitle: toRef(formData, "subtitle"),
-        description: toRef(formData, "description"),
-        brand_name: toRef(formData, "brand_name"),
-        transferable_copyright: toRef(formData, "transferable_copyright"),
-        media_url: toRef(formData, "media_url"),
-        tags: toRef(formData, "tags"),
-        categories: toRef(formData, "categories"),
-      },
+      formData,
       { $autoDirty: true }
     );
 
@@ -199,6 +197,7 @@ export default defineComponent({
       showError,
       errorMessage,
       v$,
+      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ips",label:"ips"}],
       async submit(event: Event) {
         event.preventDefault();
         const isFormCorrect = await v$.value.$validate();
@@ -206,10 +205,9 @@ export default defineComponent({
         try {
           await store.dispatch("nft/update", { id: nft.id, details: formData });
           showSuccess.value = true;
-        } catch (error) {
-          console.log(error);
-          // errorMessage.value = String(message);
-          // showError.value = true;
+        } catch ({message}) {
+          errorMessage.value = String(message);
+          showError.value = true;
         }
       },
       formatVuelidateErrors(errors: any[]) {

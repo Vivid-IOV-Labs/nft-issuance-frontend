@@ -36,16 +36,6 @@
         ></base-input>
       </div>
       <div>
-        <base-input
-          id="media_url"
-          v-model="formData.media_url"
-          label-text="media_url"
-          type="text"
-          placeholder="media_url"
-          :errors="formatVuelidateErrors(v$.media_url.$errors)"
-        ></base-input>
-      </div>
-      <div>
         <base-select
           id="domain_protocol"
           v-model="formData.domain_protocol"
@@ -182,7 +172,6 @@ export default defineComponent({
       subtitle: "",
       description: "",
       tags: [],
-      media_url: "",
       domain_protocol:"",
       categories: [],
       brand_name: "",
@@ -194,14 +183,13 @@ export default defineComponent({
     const showSuccess = ref(false);
     const rules = computed(() => ({
       title: { required },
-      token_name: { required, maxLength: maxLength(38) },
+      token_name: { required, maxLength: maxLength(18) },
       subtitle: {},
       description: {},
       brand_name: {
         required,
       },
       transferable_copyright: { required },
-      media_url: { required, url },
       domain_protocol: { required },
       tags: { required },
       categories: { required },
@@ -221,10 +209,9 @@ export default defineComponent({
         try {
           await store.dispatch("nft/create", formData);
           showSuccess.value = true;
-        } catch (error) {
-          console.log(error);
-          // errorMessage.value = String(message);
-          // showError.value = true;
+        } catch ({message}) {
+          errorMessage.value = String(message);
+          showError.value = true;
         }
       },
       pushToMediaList() {
