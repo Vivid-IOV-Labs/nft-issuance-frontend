@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-2 my-1">
     <div class="flex flex-col md:grid grid-cols-12 text-gray-50">
       <div v-for="status in history" class="flex md:contents">
         <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">

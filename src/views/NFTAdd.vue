@@ -46,6 +46,16 @@
         ></base-input>
       </div>
       <div>
+        <base-select
+          id="domain_protocol"
+          v-model="formData.domain_protocol"
+          label="Protocol"
+          :choices="protocols"
+          placeholder="domain_protocol"
+          :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
+        ></base-select>
+      </div>
+      <div>
         <base-text-area
           id="description"
           v-model="formData.description"
@@ -132,6 +142,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import BaseCheckbox from "@/components/BaseCheckbox.vue";
 import BaseDialog from "@/components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
+import BaseSelect from "@/components/BaseSelect.vue";
 import { reactive, defineComponent, computed, ref, Ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -158,6 +169,7 @@ export default defineComponent({
     BaseCheckbox,
     BaseDialog,
     BaseMultiSelect,
+    BaseSelect,
     ArrowLeftIcon,
   },
   setup: () => {
@@ -171,6 +183,7 @@ export default defineComponent({
       description: "",
       tags: [],
       media_url: "",
+      domain_protocol:"",
       categories: [],
       brand_name: "",
       transferable_copyright: false,
@@ -189,6 +202,7 @@ export default defineComponent({
       },
       transferable_copyright: { required },
       media_url: { required, url },
+      domain_protocol: { required },
       tags: { required },
       categories: { required },
     }));
@@ -199,6 +213,7 @@ export default defineComponent({
       showError,
       showSuccess,
       errorMessage,
+      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ips",label:"ips"}],
       async submit(event: Event) {
         event.preventDefault();
         const isFormCorrect = await v$.value.$validate();

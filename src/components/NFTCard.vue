@@ -13,7 +13,7 @@
         @error="fallbackImg"
       />
     </div>
-        <claiming-timeline  v-if="canScan"  :history="claimingHistory"></claiming-timeline>
+        <claiming-timeline   :history="claimingHistory"></claiming-timeline>
 
     <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
       <a

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="modelValue" class="p-1">
+  <div class="p-1">
     <label
       class="uppercase tracking-wide text-gray-700 text-xs font-bold mr-2"
       :for="name"
@@ -7,9 +7,9 @@
     >
     <select
       :id="name"
-      class="rounded py-1"
-      :value="modelValue.value"
+      class="shadow-inner w-full text-gray-700 rounded py-3 px-4 mb-3 "
       v-bind="$attrs"
+      :selected="modelValue?.value || ''"
       @change="handleChange"
     >
       <option
