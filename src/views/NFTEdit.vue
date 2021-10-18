@@ -36,12 +36,14 @@
         ></base-input>
       </div>
             <div>
+              {{formData.domain_protocol}}
         <base-select
           id="domain_protocol"
           v-model="formData.domain_protocol"
           label="Protocol"
           :choices="protocols"
           placeholder="domain_protocol"
+          :as-val="true"
           :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
         ></base-select>
       </div>
@@ -197,7 +199,7 @@ export default defineComponent({
       showError,
       errorMessage,
       v$,
-      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ips",label:"ips"}],
+      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ipfs",label:"ipfs"}],
       async submit(event: Event) {
         event.preventDefault();
         const isFormCorrect = await v$.value.$validate();
@@ -205,7 +207,8 @@ export default defineComponent({
         try {
           await store.dispatch("nft/update", { id: nft.id, details: formData });
           showSuccess.value = true;
-        } catch ({message}) {
+        } catch (err:any) {
+          const {response:{data:{message}}} = err
           errorMessage.value = String(message);
           showError.value = true;
         }

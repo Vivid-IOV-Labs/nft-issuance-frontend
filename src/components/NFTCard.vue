@@ -371,7 +371,7 @@ export default defineComponent({
       return this.nft.details.token_name;
     },
     posterUrl(): string {
-      return this.nft.details.media_url;
+      return  this.nft.details.domain_protocol+ "://" + this.nft.details.token_name ;
     },
     title(): string {
       if (this.nft && this.nft.details && this.nft.details.title) {

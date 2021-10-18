@@ -8,14 +8,14 @@
     <select
       :id="name"
       class="shadow-inner w-full text-gray-700 rounded py-3 px-4 mb-3 "
-      v-bind="$attrs"
-      :selected="modelValue?.value || ''"
       @change="handleChange"
     >
       <option
         v-for="choice in choices"
         :key="choice.label"
         :value="choice.value"
+        :selected="choice.value == model"
+        
       >
         {{ choice.label }}
       </option>
@@ -47,17 +47,28 @@ export default defineComponent({
       type: Object as PropType<Choice>,
       default: () => undefined,
     },
+    asVal:{Boolean,
+      default: () => false,
+    }
   },
   emits: { "update:modelValue": null },
   setup(props, { emit }) {
+        const fromModelAsVal = props.choices.find((choice: Choice) => {
+            return choice.value == props.modelValue;
+          });
     return {
+      model:(props.asVal) ? props.modelValue : props.modelValue?.value,
       handleChange(event: Event): void {
         const value = (event.target as HTMLSelectElement).value;
         if (value) {
           const selected = props.choices.find((choice: Choice) => {
             return choice.value == value;
           });
-          emit("update:modelValue", selected);
+          if(props.asVal){
+            emit("update:modelValue", selected?.value);
+          } else {
+            emit("update:modelValue", selected);
+          }
         }
       },
     };

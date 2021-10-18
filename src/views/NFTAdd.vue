@@ -42,6 +42,7 @@
           label="Protocol"
           :choices="protocols"
           placeholder="domain_protocol"
+          :as-val="true"
           :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
         ></base-select>
       </div>
@@ -176,7 +177,6 @@ export default defineComponent({
       categories: [],
       brand_name: "",
       transferable_copyright: false,
-      status: "",
     });
     const showError = ref(false);
     const errorMessage = ref<string>("");

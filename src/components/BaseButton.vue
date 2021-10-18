@@ -7,8 +7,7 @@
       'bg-cyan-500 hover:bg-cyan-600': status == 'info',
     }"
     class="text-white font-bold py-2 px-4 rounded-md shadow-sm"
-    v-bind="$attrs"
-  >
+    >
     <slot />
   </button>
 </template>

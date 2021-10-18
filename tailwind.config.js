@@ -29,7 +29,7 @@ module.exports = {
         "2xl": "6rem",
       },
     },
-    extend: {},
+    extend: { opacity: ["disabled"], accessibility: ["hover", "active"] },
   },
   plugins: [require("@tailwindcss/forms")],
 };
