@@ -12,6 +12,7 @@
     "@heroicons/vue": "^1.0.1",
     "@suadelabs/vue3-multiselect": "^1.0.2",
     "@tailwindcss/forms": "^0.2.1",
+    "@vue-a11y/announcer": "^3.1.5",
     "@vuelidate/core": "^2.0.0-alpha.19",
     "@vuelidate/validators": "^2.0.0-alpha.17",
     "axios": "^0.21.1",
@@ -50,6 +51,7 @@
     "tailwindcss": "^2.2.16",
     "typescript": "^4.3.2",
     "vite": "^2.3.7",
+    "vue-axe": "^3.1.2",
     "vue-tsc": "^0.0.24"
   }
 }

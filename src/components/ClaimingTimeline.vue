@@ -1,7 +1,7 @@
 <template>
   <div class="p-2 my-1">
     <div class="flex flex-col md:grid grid-cols-12 text-gray-50">
-      <div v-for="status in history.filter((x, y) => history.indexOf(x) == y)" class="flex md:contents">
+      <div v-for="status in history.filter((a, i) => history.findIndex((s) => a.title === s.title) === i) " class="flex md:contents">
         <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">
           <div class="h-full w-4 flex items-center justify-center">
             <div
@@ -9,7 +9,7 @@
                 'bg-green-500': status.type === 'success',
                 'bg-red-500': status.type === 'error',
               }"
-              class="h-full w-1 bg-green-500 pointer-events-none"
+              class="h-full w-1 bg-grey-500 pointer-events-none"
             ></div>
           </div>
           <div
@@ -24,7 +24,7 @@
               top-1/2
               -mt-2
               rounded-full
-              bg-green-500
+              bg-grey-500
               shadow
               text-center
             "
@@ -45,6 +45,7 @@
             mr-auto
             shadow-md
             w-full
+            bg-grey-500
           "
         >
           <h3 class="font-bold text-sm mb-1">{{ status.title }}</h3>
