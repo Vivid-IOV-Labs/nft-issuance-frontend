@@ -7,9 +7,10 @@
     <base-input
       id="search"
       v-model="searchByTitle"
-      placeholder="Search by title"
+      placeholder="Ex: peerkat"
       type="search"
-      label-text=""
+      label-text="Search NFT by Title"
+      :label-hidden="true"
       class="w-full max-w-xl"
     ></base-input>
   </div>

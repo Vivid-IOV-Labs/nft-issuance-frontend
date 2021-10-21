@@ -3,23 +3,29 @@
     <label
       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
       :for="id"
-      >{{ labelText }}</label
-    >
+      ><span v-show="!labelHidden"> {{ labelText }}</span>
     <input
       :id="id"
-      class="shadow-inner w-full text-gray-700 rounded py-3 px-4 mb-3"
+      class="shadow-inner w-full text-gray-700 rounded py-2 px-4 mb-3"
       :class="{ 'border-red-500': errors.length }"
       :value="modelValue"
       :type="type"
+      :aria-label="labelText"
       :placeholder="placeholder"
-      v-bind="$attrs"
+      :required="isRequeired"
+      :aria-required="isRequeired"
+      :aria-invalid="isInvalid"
+      v-bind="describedBy"
       @input="handleChange"
     />
+    </label
+    >
     <base-alert
       v-if="errors.length"
+      :id="`alert-${id}`"
       :messages="errors"
+      role="alert"
       status="danger"
-      class="input-errors"
     >
     </base-alert>
   </div>
@@ -27,7 +33,7 @@
 
 <script lang="ts">
 import BaseAlert from "@/components/BaseAlert.vue";
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 
 const getValue = (event: Event): string | number | undefined => {
   const value =
@@ -66,14 +72,28 @@ export default defineComponent({
       type: Array,
       default: (): Array<unknown> => [],
     },
+    isRequeired: {
+      type: Boolean,
+      default: false,
+    },
+    isInvalid: {
+      type: Boolean,
+      default: false,
+    },
+    labelHidden: { type: Boolean, default: () => false },
   },
   emits: { "update:modelValue": null },
-  methods: {
-    handleChange(event: Event): void {
-      const value = getValue(event);
-      console.log(value);
-      this.$emit("update:modelValue", value);
-    },
+  setup(props, { emit }) {
+    const describedBy = computed(() => {
+      return props.isInvalid ? { ariaDescribedby: `alert-${props.id}` } : {};
+    });
+    return {
+      describedBy,
+      handleChange(event: Event): void {
+        const value = getValue(event);
+        emit("update:modelValue", value);
+      },
+    };
   },
 });
 </script>

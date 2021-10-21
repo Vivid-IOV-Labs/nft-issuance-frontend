@@ -1,8 +1,8 @@
 <template>
   <HeaderNavigation />
-  <div class="container m-auto px-6 pt-4 pb-6">
+  <main class="container m-auto px-6 pt-4 pb-6">
     <slot></slot>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">

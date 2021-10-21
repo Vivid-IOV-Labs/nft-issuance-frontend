@@ -2,22 +2,25 @@
   <div class="p-1">
     <label
       class="uppercase tracking-wide text-gray-700 text-xs font-bold mr-2"
-      :for="name"
-      >{{ label }}</label
+      :for="id"
+      ><span v-if="!labelHidden"> {{ labelText }}</span></label
     >
     <select
-      :id="name"
-      class="shadow-inner w-full text-gray-700 rounded py-3 px-4 mb-3 "
+      :id="id"
+      class="shadow-inner w-full text-gray-700 rounded py-2 px-4 mb-3 "
+      :aria-label="labelText"
+      :required="isRequeired"
+      :aria-required="isRequeired"
+      :aria-invalid="isInvalid"
+      v-bind="describedBy"
       @blur="handleChange"
-
+      @change="handleChange"
     >
       <option
         v-for="choice in choices"
         :key="choice.label"
         :value="choice.value"
         :selected="choice.value == model"
-        @blur="handleChange"
-        @change="handleChange"
       >
         {{ choice.label }}
       </option>
@@ -26,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, computed } from "vue";
 interface Choice {
   label: string;
   value?: string | number;
@@ -37,11 +40,11 @@ export default defineComponent({
       type: Array as PropType<Choice[]>,
       default: () => [],
     },
-    name: {
+    id: {
       type: String,
       default: () => "",
     },
-    label: {
+    labelText: {
       type: String,
       default: () => "",
     },
@@ -49,26 +52,36 @@ export default defineComponent({
       type: Object as PropType<Choice>,
       default: () => undefined,
     },
-    asVal:{
-      type:Boolean,
-      default: () => false,
+    errors: {
+      type: Array,
+      default: (): Array<unknown> => [],
     },
-    labelHidden:{
-      type:Boolean,
-      default: () => false,
-    }
+    isRequeired: {
+      type: Boolean,
+      default: false,
+    },
+    isInvalid: {
+      type: Boolean,
+      default: false,
+    },
+    asVal: { type: Boolean, default: () => false },
+    labelHidden: { type: Boolean, default: () => false },
   },
   emits: { "update:modelValue": null },
   setup(props, { emit }) {
+    const describedBy = computed(() => {
+      return props.isInvalid ? { ariaDescribedby: `alert-${props.id}` } : {};
+    });
     return {
-      model:(props.asVal) ? props.modelValue : props.modelValue?.value,
+      model: props.asVal ? props.modelValue : props.modelValue?.value,
+      describedBy,
       handleChange(event: Event): void {
         const value = (event.target as HTMLSelectElement).value;
         if (value) {
           const selected = props.choices.find((choice: Choice) => {
             return choice.value == value;
           });
-          if(props.asVal){
+          if (props.asVal) {
             emit("update:modelValue", selected?.value);
           } else {
             emit("update:modelValue", selected);

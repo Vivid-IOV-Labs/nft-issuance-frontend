@@ -12,6 +12,8 @@
           label-text="token_name"
           type="text"
           placeholder="Media ID"
+          :is-required="'required' in v$.token_name"
+          :is-invalid="v$.token_name?.$dirty && v$.token_name.$invalid"
           :errors="formatVuelidateErrors(v$.token_name.$errors)"
         ></base-input>
       </div>
@@ -22,6 +24,8 @@
           label-text="title"
           type="text"
           placeholder="Title"
+          :is-required="'required' in v$.title"
+          :is-invalid="v$.title.$dirty && v$.title.$invalid"
           :errors="formatVuelidateErrors(v$.title.$errors)"
         ></base-input>
       </div>
@@ -32,6 +36,8 @@
           label-text="subtitle"
           type="text"
           placeholder="subtitle"
+          :is-required="'required' in v$.subtitle"
+          :is-invalid="v$.subtitle?.$dirty && v$.subtitle.$invalid"
           :errors="formatVuelidateErrors(v$.subtitle.$errors)"
         ></base-input>
       </div>
@@ -39,10 +45,12 @@
         <base-select
           id="domain_protocol"
           v-model="formData.domain_protocol"
-          label="Protocol"
+          label-text="Protocol"
           :choices="protocols"
           placeholder="domain_protocol"
           :as-val="true"
+          :is-required="'required' in v$.domain_protocol"
+          :is-invalid="v$.domain_protocol?.$dirty && v$.domain_protocol.$invalid"
           :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
         ></base-select>
       </div>
@@ -52,6 +60,8 @@
           v-model="formData.description"
           label-text="description"
           placeholder="Publisher description"
+          :is-required="'required' in v$.description"
+          :is-invalid="v$.description?.$dirty && v$.description.$invalid"
           :errors="formatVuelidateErrors(v$.description.$errors)"
         ></base-text-area>
       </div>
@@ -62,15 +72,19 @@
           label-text="brand_name"
           type="text"
           placeholder="brand_name"
+          :is-required="'required' in v$.brand_name"
+          :is-invalid="v$.brand_name?.$dirty && v$.brand_name.$invalid"
           :errors="formatVuelidateErrors(v$.brand_name.$errors)"
         ></base-input>
       </div>
       <div>
         <base-multi-select
           v-model="formData.categories"
-          name="categories"
+          id="categories"
           label-text="categories"
           label="value"
+          :is-required="'required' in v$.categories"
+          :is-invalid="v$.categories?.$dirty && v$.categories.$invalid"
           :errors="
             v$.categories.$errors &&
             formatVuelidateErrors(v$.categories.$errors)
@@ -80,8 +94,10 @@
       <div>
         <base-multi-select
           v-model="formData.tags"
-          name="tags"
+          id="tags"
           label-text="tags"
+          :is-required="'required' in v$.tags"
+          :is-invalid="v$.tags?.$dirty && v$.tags.$invalid"
           :errors="v$.tags.$errors && formatVuelidateErrors(v$.tags.$errors)"
         ></base-multi-select>
       </div>
@@ -91,6 +107,8 @@
           v-model="formData.transferable_copyright"
           text="Is transferable_copyright"
           label-text="transferable_copyright"
+          :is-required="'required' in v$.transferable_copyright"
+          :is-invalid="v$.transferable_copyright?.$dirty && v$.transferable_copyright.$invalid"
           :errors="
             v$.transferable_copyright.$errors &&
             formatVuelidateErrors(v$.transferable_copyright.$errors)

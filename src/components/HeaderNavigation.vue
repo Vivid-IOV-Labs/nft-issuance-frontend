@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 z-50 flex-1 flex flex-col">
+  <header class="sticky top-0 z-50 flex-1 flex flex-col">
     <nav
       :class="{
         'bg-cyan-400': isBrandWorker,
@@ -38,15 +38,14 @@
       <div class="flex items-center">
         <div>
           <div class="locale-changer">
-            <select v-model="$i18n.locale">
-              <option
-                v-for="locale in $i18n.availableLocales"
-                :key="`locale-${locale}`"
-                :value="locale"
-              >
-                {{ locale }}
-              </option>
-            </select>
+            <base-select
+              id="lang"
+              v-model="$i18n.locale"
+              :choices="languages"
+              label-text="Lang"
+              as-val="true"
+              label-hidden="true"
+            ></base-select>
           </div>
           <!-- <div>
             <a v-if="$i18n.locale !== 'de'" @click="changeLanguage('de')">DE</a>
@@ -71,7 +70,7 @@
         </base-button>
       </div>
     </nav>
-  </div>
+  </header>
 </template>
 <script lang="ts">
 /**
@@ -87,6 +86,7 @@ const isProduction =
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed } from "vue";
 import BaseButton from "@/components/BaseButton.vue";
+import BaseSelect from "@/components/BaseSelect.vue";
 
 function getRole() {
   return localStorage.getItem("user-role");
@@ -99,6 +99,7 @@ function withRole(roles: string[]) {
 export default defineComponent({
   components: {
     BaseButton,
+    BaseSelect
   },
   setup: () => {
     const route = useRoute();
@@ -120,7 +121,12 @@ export default defineComponent({
     const title = computed(() => getTitle());
 
     return {
-      isProduction,
+      languages: [
+        { label: "EN", value: "en" },
+        { label: "EL", value: "el" },
+        { label: "DE", value: "de" },
+        { label: "IT", value: "it" },
+      ],
       title,
       route,
       isBrandWorker,
