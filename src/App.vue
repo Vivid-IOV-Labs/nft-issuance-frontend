@@ -11,7 +11,7 @@
           <Suspense>
             <template #default>
               <div>
-                <LoadTranslations></LoadTranslations>
+                  <LoadTranslations></LoadTranslations>
                 <component :is="Component" :key="route.path" />
               </div>
             </template>
@@ -52,7 +52,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import LoadTranslations from "./i18n/LoadTranslations.vue";
+import LoadTranslations from "@/i18n/LoadTranslations.vue";
 
 export default defineComponent({
   name: "App",
