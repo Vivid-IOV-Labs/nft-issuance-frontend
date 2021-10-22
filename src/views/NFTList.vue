@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center items-center mb-2">
     <h2>
-      <span>{{ $t("welcome") }} {{ $t("example") }}</span>
+      <span>{{ $t("welcome") }}</span>
     </h2>
     <hr />
     <base-input
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import NftCard from "../components/NFTCard.vue";
 import BaseInput from "../components/BaseInput.vue";
 import { useStore } from "vuex";

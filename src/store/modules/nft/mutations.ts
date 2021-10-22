@@ -17,7 +17,7 @@ const mutations: MutationTree<NFTState> = {
   },
   set(state: NFTState, updatedNft: NFT): void {
     const index = state.all.findIndex((nft) => {
-      return nft.id === updatedNft._id || nft.id === updatedNft.id;
+      return nft.id === updatedNft.id;
     });
     if (index > -1) {
       state.all[index] = updatedNft;

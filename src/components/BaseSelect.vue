@@ -1,10 +1,9 @@
 <template>
   <div class="p-1">
     <label
-      class="uppercase tracking-wide text-gray-700 text-xs font-bold mr-2"
+      class="uppercase text-gray-700 text-xs font-bold mr-2"
       :for="id"
-      ><span v-if="!labelHidden"> {{ labelText }}</span></label
-    >
+      ><span v-if="!labelHidden"> {{ labelText }}</span>
     <select
       :id="id"
       class="shadow-inner w-full text-gray-700 rounded py-2 px-4 mb-3 "
@@ -25,6 +24,8 @@
         {{ choice.label }}
       </option>
     </select>
+    </label
+    >
   </div>
 </template>
 
@@ -49,7 +50,7 @@ export default defineComponent({
       default: () => "",
     },
     modelValue: {
-      type: Object as PropType<Choice>,
+      type: [String, Object] as PropType<string | Choice>,
       default: () => undefined,
     },
     errors: {
@@ -73,7 +74,7 @@ export default defineComponent({
       return props.isInvalid ? { ariaDescribedby: `alert-${props.id}` } : {};
     });
     return {
-      model: props.asVal ? props.modelValue : props.modelValue?.value,
+      model: typeof props.modelValue == 'string' ? props.modelValue : props.modelValue?.value,
       describedBy,
       handleChange(event: Event): void {
         const value = (event.target as HTMLSelectElement).value;
