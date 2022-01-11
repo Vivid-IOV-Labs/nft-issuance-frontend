@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="rounded-lg border bg-white shadow-lg"
-  >
+  <div class="rounded-lg border bg-white shadow-lg">
     <div class="w-full rounded-t-lg h-80 overflow-hidden">
       <img
         :class="{
@@ -13,7 +11,7 @@
         @error="fallbackImg"
       />
     </div>
-        <claiming-timeline   :history="claimingHistory"></claiming-timeline>
+    <claiming-timeline :history="claimingHistory"></claiming-timeline>
 
     <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
       <a
@@ -179,7 +177,7 @@
 import ClaimingTimeline from "../components/ClaimingTimeline.vue";
 import BaseButton from "../components/BaseButton.vue";
 import BaseDialog from "../components/BaseDialog.vue";
-import { PropType } from "vue";
+import { computed, PropType } from "vue";
 import { NFT } from "../models/NFT";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -216,6 +214,99 @@ export default defineComponent({
     const showQRCode = ref(false);
     const invalidQR = ref(false);
     const claimingHistory = reactive<Status[]>([]);
+    const isBrandWorker = computed(() => store.getters["auth/isBrandWorker"]);
+    const isBrandManager = computed(() => store.getters["auth/isBrandManager"]);
+    const isAdminWorker = computed(() => store.getters["auth/isAdminWorker"]);
+    const isPublic = computed(() => store.getters["auth/isPublic"]);
+    const canUpdate = computed(() => {
+      return (
+        ["created", "rejected"].includes(props.nft.current_status) &&
+        ["created", ""].includes(props.nft.previous_status) &&
+        isBrandWorker.value
+      );
+    });
+    const canDelete = computed(() => {
+      return (
+        ["created", "rejected"].includes(props.nft.current_status) &&
+        isBrandWorker.value
+      );
+    });
+    const canApprove = computed(() => {
+      return (
+        ["created"].includes(props.nft.current_status) && isBrandManager.value
+      );
+    });
+    const canReject = computed(() => {
+      return (
+        (["created"].includes(props.nft.current_status) &&
+          isBrandManager.value) ||
+        (["approved"].includes(props.nft.current_status) && isAdminWorker.value)
+      );
+    });
+    const canIssue = computed(() => {
+      return (
+        ["approved"].includes(props.nft.current_status) && isAdminWorker.value
+      );
+    });
+    const canClaim = computed(() => {
+      return ["issued"].includes(props.nft.current_status) && isPublic.value;
+    });
+    const xumnQRCode = computed(() => {
+      const { length, [length - 1]: last } = props.nft.xumm;
+      return length ? last.details.refs.qr_png : "";
+    });
+    const canScan = computed(() => {
+      return ["claiming"].includes(props.nft.current_status) && xumnQRCode;
+    });
+    const xumnLink = computed(() => {
+      const { length, [length - 1]: last } = props.nft.xumm;
+      return length ? last.details.next.always : "";
+    });
+    const tokenName = computed(() => props.nft.details.token_name);
+    const posterUrl = computed(
+      () =>
+        props.nft.details.domain_protocol + "://" + props.nft.details.token_name
+    );
+    const title = computed(() =>
+      props.nft && props.nft.details && props.nft.details.title
+        ? props.nft.details.title
+        : ""
+    );
+    const brand_name = computed(() =>
+      props.nft && props.nft.details && props.nft.details.brand_name
+        ? props.nft.details.brand_name
+        : ""
+    );
+    const tags = computed(() =>
+      props.nft && props.nft.details && props.nft.details.tags
+        ? props.nft.details.tags
+            .reduce((acc, tag) => {
+              acc += ` #${tag},`;
+              return acc;
+            }, "")
+            .slice(1, -1)
+        : ""
+    );
+    const categories = computed(() =>
+      props.nft && props.nft.details && props.nft.details.categories
+        ? props.nft.details.categories
+            .reduce((acc, tag) => {
+              acc += `${tag},`;
+              return acc;
+            }, "")
+            .slice(1, -1)
+        : ""
+    );
+    const subtitle = computed(() =>
+      props.nft && props.nft.details && props.nft.details.subtitle
+        ? props.nft.details.subtitle
+        : ""
+    );
+    const description = computed(() =>
+      props.nft && props.nft.details && props.nft.details.description
+        ? props.nft.details.description
+        : ""
+    );
     if (
       props.nft.xumm &&
       props.nft.xumm.length &&
@@ -314,117 +405,136 @@ export default defineComponent({
       editNFT() {
         router.push({ path: `/nft/edit/${props.nft.id}` });
       },
+      canUpdate,
+      canDelete,
+      canApprove,
+      canReject,
+      canIssue,
+      canClaim,
+      canScan,
+      xumnQRCode,
+      xumnLink,
+      tokenName,
+      posterUrl,
+      title,
+      brand_name,
+      tags,
+      categories,
+      subtitle,
+      description,
     };
   },
-  computed: {
-    canUpdate(): boolean {
-      return (
-        ["created", "rejected"].includes(this.nft.current_status) &&
-        ["created", ""].includes(this.nft.previous_status) &&
-        withRole(["brand/worker"])
-      );
-    },
-    canDelete(): boolean {
-      return (
-        ["created", "rejected"].includes(this.nft.current_status) &&
-        withRole(["brand/worker"])
-      );
-    },
-    canApprove(): boolean {
-      return (
-        ["created"].includes(this.nft.current_status) &&
-        withRole(["brand/manager"])
-      );
-    },
-    canReject(): boolean {
-      return (
-        (["created"].includes(this.nft.current_status) &&
-          withRole(["brand/manager"])) ||
-        (["approved"].includes(this.nft.current_status) &&
-          withRole(["admin/worker"]))
-      );
-    },
-    canIssue(): boolean {
-      return (
-        ["approved"].includes(this.nft.current_status) &&
-        withRole(["admin/worker"])
-      );
-    },
-    canClaim(): boolean {
-      return (
-        ["issued"].includes(this.nft.current_status) && withRole(["public"])
-      );
-    },
-    canScan() {
-      //onst { length, [length - 1]: last } = this.nft.xumm;
-      return ["claiming"].includes(this.nft.current_status) && this.xumnQRCode;
-    },
-    xumnQRCode(): string {
-      const { length, [length - 1]: last } = this.nft.xumm;
-      return length ? last.details.refs.qr_png : "";
-    },
-    xumnLink(): string {
-      const { length, [length - 1]: last } = this.nft.xumm;
-      return length ? last.details.next.always : "";
-    },
-    tokenName(): string {
-      return this.nft.details.token_name;
-    },
-    posterUrl(): string {
-      return  this.nft.details.domain_protocol+ "://" + this.nft.details.token_name ;
-    },
-    title(): string {
-      if (this.nft && this.nft.details && this.nft.details.title) {
-        return this.nft.details.title;
-      } else {
-        return "";
-      }
-    },
-    brand_name(): string {
-      if (this.nft && this.nft.details && this.nft.details.brand_name) {
-        return this.nft.details.brand_name;
-      } else {
-        return "";
-      }
-    },
-    tags(): string {
-      if (this.nft && this.nft.details && this.nft.details.tags) {
-        return this.nft.details.tags
-          .reduce((acc, tag) => {
-            acc += ` #${tag},`;
-            return acc;
-          }, "")
-          .slice(1, -1);
-      } else {
-        return "";
-      }
-    },
-    categories(): string {
-      if (this.nft && this.nft.details && this.nft.details.categories) {
-        return this.nft.details.categories
-          .reduce((acc, tag) => {
-            acc += `${tag},`;
-            return acc;
-          }, "")
-          .slice(1, -1);
-      } else {
-        return "";
-      }
-    },
-    subtitle(): string {
-      if (this.nft && this.nft.details && this.nft.details.subtitle) {
-        return this.nft.details.subtitle;
-      } else {
-        return "";
-      }
-    },
-    description(): string {
-      if (this.nft && this.nft.details && this.nft.details.description) {
-        return this.nft.details.description;
-      } else {
-        return "";
-      }
-    },
-  },
+  // computed: {
+  //   canUpdate(): boolean {
+  //     return (
+  //       ["created", "rejected"].includes(this.nft.current_status) &&
+  //       ["created", ""].includes(this.nft.previous_status) &&
+  //       withRole(["brand/worker"])
+  //     );
+  //   },
+  //   canDelete(): boolean {
+  //     return (
+  //       ["created", "rejected"].includes(this.nft.current_status) &&
+  //       withRole(["brand/worker"])
+  //     );
+  //   },
+  //   canApprove(): boolean {
+  //     return (
+  //       ["created"].includes(this.nft.current_status) &&
+  //       withRole(["brand/manager"])
+  //     );
+  //   },
+  //   canReject(): boolean {
+  //     return (
+  //       (["created"].includes(this.nft.current_status) &&
+  //         withRole(["brand/manager"])) ||
+  //       (["approved"].includes(this.nft.current_status) &&
+  //         withRole(["admin/worker"]))
+  //     );
+  //   },
+  //   canIssue(): boolean {
+  //     return (
+  //       ["approved"].includes(this.nft.current_status) &&
+  //       withRole(["admin/worker"])
+  //     );
+  //   },
+  //   canClaim(): boolean {
+  //     return (
+  //       ["issued"].includes(this.nft.current_status) && withRole(["public"])
+  //     );
+  //   },
+  //   canScan() {
+  //     //onst { length, [length - 1]: last } = this.nft.xumm;
+  //     return ["claiming"].includes(this.nft.current_status) && this.xumnQRCode;
+  //   },
+  //   xumnQRCode(): string {
+  //     const { length, [length - 1]: last } = this.nft.xumm;
+  //     return length ? last.details.refs.qr_png : "";
+  //   },
+  //   xumnLink(): string {
+  //     const { length, [length - 1]: last } = this.nft.xumm;
+  //     return length ? last.details.next.always : "";
+  //   },
+  //   tokenName(): string {
+  //     return this.nft.details.token_name;
+  //   },
+  //   posterUrl(): string {
+  //     return (
+  //       this.nft.details.domain_protocol + "://" + this.nft.details.token_name
+  //     );
+  //   },
+  //   title(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.title) {
+  //       return this.nft.details.title;
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  //   brand_name(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.brand_name) {
+  //       return this.nft.details.brand_name;
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  //   tags(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.tags) {
+  //       return this.nft.details.tags
+  //         .reduce((acc, tag) => {
+  //           acc += ` #${tag},`;
+  //           return acc;
+  //         }, "")
+  //         .slice(1, -1);
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  //   categories(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.categories) {
+  //       return this.nft.details.categories
+  //         .reduce((acc, tag) => {
+  //           acc += `${tag},`;
+  //           return acc;
+  //         }, "")
+  //         .slice(1, -1);
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  //   subtitle(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.subtitle) {
+  //       return this.nft.details.subtitle;
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  //   description(): string {
+  //     if (this.nft && this.nft.details && this.nft.details.description) {
+  //       return this.nft.details.description;
+  //     } else {
+  //       return "";
+  //     }
+  //   },
+  // },
 });
 </script>

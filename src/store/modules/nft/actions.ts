@@ -5,35 +5,12 @@ import { NFT } from "../../../models/NFT";
 interface MediaState {
   all: Array<NFT>;
 }
-import {
-  isBrandWorker,
-  isBrandManager,
-  isAdminWorker,
-} from "../../../utils/auth";
-
-const all = JSON.stringify([
-  "created",
-  "approved",
-  "rejected",
-  "issued",
-  "claiming",
-  "delivered",
-]);
-
-const canSee = () =>
-  isBrandWorker
-    ? all
-    : isBrandManager
-      ? all
-      : isAdminWorker
-        ? JSON.stringify(["approved", "issued", "claiming", "delivered"])
-        : JSON.stringify(["issued", "claiming"]);
 
 const actions: ActionTree<NFT, MediaState> = {
-  async fetchAll({ commit }, params): Promise<void> {
+  async fetchAll({ commit, rootGetters }, params): Promise<void> {
     const { media, total } = await NFTService.list({
       ...params,
-      status: canSee(),
+      status: rootGetters["auth/canSee"],
     });
     commit("setAll", media);
     commit("setTotalItems", total);

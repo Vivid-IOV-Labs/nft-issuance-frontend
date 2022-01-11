@@ -11,13 +11,13 @@
           <Suspense>
             <template #default>
               <div>
-                  <LoadTranslations></LoadTranslations>
                 <component :is="Component" :key="route.path" />
               </div>
             </template>
             <template #fallback>
               <div
                 class="
+                  fixed
                   top-0
                   right-0
                   h-screen

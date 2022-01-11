@@ -78,9 +78,7 @@ export default defineComponent({
     const allNFT = computed(() => {
       return store.getters["nft/byTitle"](searchByTitle.value);
     });
-    const canCreate = computed(() => {
-      return withRole(["brand/worker"]);
-    });
+    const canCreate = computed(() => store.getters["auth/isBrandWorker"]);
 
     return { allNFT, searchByTitle, canCreate };
   },

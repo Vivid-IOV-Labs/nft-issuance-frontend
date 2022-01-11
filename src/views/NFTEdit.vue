@@ -35,8 +35,8 @@
           :errors="formatVuelidateErrors(v$.subtitle.$errors)"
         ></base-input>
       </div>
-            <div>
-              {{formData.domain_protocol}}
+      <div>
+        {{ formData.domain_protocol }}
         <base-select
           id="domain_protocol"
           v-model="formData.domain_protocol"
@@ -176,7 +176,7 @@ export default defineComponent({
     const rules = computed(() => ({
       title: { required },
       token_name: { required },
-      domain_protocol:{required},
+      domain_protocol: { required },
       subtitle: {},
       description: {},
       brand_name: {
@@ -187,11 +187,7 @@ export default defineComponent({
       categories: { required },
     }));
 
-    const v$ = useVuelidate(
-      rules,
-      formData,
-      { $autoDirty: true }
-    );
+    const v$ = useVuelidate(rules, formData, { $autoDirty: true });
 
     return {
       formData,
@@ -199,7 +195,11 @@ export default defineComponent({
       showError,
       errorMessage,
       v$,
-      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ipfs",label:"ipfs"}],
+      protocols: [
+        { value: "http", label: "http" },
+        { value: "https", label: "https" },
+        { value: "ipfs", label: "ipfs" },
+      ],
       async submit(event: Event) {
         event.preventDefault();
         const isFormCorrect = await v$.value.$validate();
@@ -207,8 +207,12 @@ export default defineComponent({
         try {
           await store.dispatch("nft/update", { id: nft.id, details: formData });
           showSuccess.value = true;
-        } catch (err:any) {
-          const {response:{data:{message}}} = err
+        } catch (err: any) {
+          const {
+            response: {
+              data: { message },
+            },
+          } = err;
           errorMessage.value = String(message);
           showError.value = true;
         }

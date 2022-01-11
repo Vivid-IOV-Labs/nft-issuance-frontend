@@ -25,42 +25,22 @@
       </ul>
 
       <ul class="flex items-center">
-        <!-- add button -->
         <li>
           <h1 class="pl-8 lg:pl-0 uppercase font-semibold text-lg">
             {{ title }}
           </h1>
         </li>
       </ul>
-
-      <!-- to bar right  -->
-      <!-- to bar right  -->
       <div class="flex items-center">
-        <div>
-          <div class="locale-changer">
-            <base-select
-              id="lang"
-              v-model="$i18n.locale"
-              :choices="languages"
-              :label-text="$t('Select Language')"
-              :as-val="true"
-              :label-hidden="true"
-            ></base-select>
-          </div>
-          <!-- <div>
-            <a v-if="$i18n.locale !== 'de'" @click="changeLanguage('de')">DE</a>
-            <strong v-if="$i18n.locale === 'de'">DE</strong>
-            &nbsp;|&nbsp;
-            <a v-if="$i18n.locale !== 'el'" @click="changeLanguage('el')">EL</a>
-            <strong v-if="$i18n.locale === 'el'">EL</strong>
-            &nbsp;|&nbsp;
-            <a v-if="$i18n.locale !== 'it'" @click="changeLanguage('it')">IT</a>
-            <strong v-if="$i18n.locale === 'it'">IT</strong>
-            &nbsp;|&nbsp;
-            <a v-if="$i18n.locale !== 'en'" @click="changeLanguage('en')">EN</a>
-            <strong v-if="$i18n.locale === 'en'">EN</strong>
-          </div> -->
-        </div>
+        <base-select
+          id="role"
+          v-model="currentRole"
+          :choices="roles"
+          label-text="Select Role"
+          :as-val="true"
+          :label-hidden="true"
+        ></base-select>
+        <div></div>
         <base-button
           v-if="route.path == '/media'"
           class="pr-6 uppercase text-lg ml-2"
@@ -73,60 +53,55 @@
   </header>
 </template>
 <script lang="ts">
-/**
- Brand worker - lighter shade of the peerkat green
-Brand manager - darker shade of the peerkat green
-Admin worker - purple
-Public User - amber
- */
-const apiUrl = import.meta.env.VITE_API_URL;
-const isProduction =
-  apiUrl == "https://media.peerkat.live" ||
-  apiUrl == "https://vivid-media.herokuapp.com";
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed } from "vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseSelect from "@/components/BaseSelect.vue";
-
-function getRole() {
-  return localStorage.getItem("user-role");
-}
-function withRole(roles: string[]) {
-  roles.includes(getRole() || "");
-  return roles.includes(getRole() || "");
-}
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: {
     BaseButton,
-    BaseSelect
+    BaseSelect,
   },
   setup: () => {
     const route = useRoute();
     const router = useRouter();
-    const isBrandWorker = withRole(["brand/worker"]);
-    const isBrandManager = withRole(["brand/manager"]);
-    const isAdminWorker = withRole(["admin/worker"]);
-    const isPublic = withRole(["public"]);
+    const store = useStore();
+
+    const currentRole = computed({
+      get(): string {
+        return store.getters["auth/getCurrentRole"];
+      },
+      set(role: string): void {
+        store.dispatch("auth/setCurrentRole", role);
+      },
+    });
+    const isBrandWorker = computed(() => store.getters["auth/isBrandWorker"]);
+    const isBrandManager = computed(() => store.getters["auth/isBrandManager"]);
+    const isAdminWorker = computed(() => store.getters["auth/isAdminWorker"]);
+    const isPublic = computed(() => store.getters["auth/isPublic"]);
 
     const getTitle = () =>
-      isBrandWorker
+      isBrandWorker.value
         ? "BRAND WORKER"
-        : isBrandManager
+        : isBrandManager.value
         ? "BRAND MANAGER"
-        : isAdminWorker
+        : isAdminWorker.value
         ? "ADMIN WORKER"
         : "PUBLIC";
 
     const title = computed(() => getTitle());
 
     return {
-      languages: [
-        { label: "EN", value: "en" },
-        { label: "EL", value: "el" },
-        { label: "DE", value: "de" },
-        { label: "IT", value: "it" },
+      roles: [
+        { label: "Select User", value: null },
+        { label: "Brand Worker", value: "brand/worker" },
+        { label: "Brand Manager", value: "brand/manager" },
+        { label: "Admin", value: "admin/worker" },
+        { label: "Public", value: "public" },
       ],
+      currentRole,
       title,
       route,
       isBrandWorker,
@@ -140,8 +115,8 @@ export default defineComponent({
     };
   },
   methods: {
-    changeLanguage(lang:string) {
-     if(this.$root) this.$root.$i18n.locale = lang;
+    changeLanguage(lang: string) {
+      if (this.$root) this.$root.$i18n.locale = lang;
     },
   },
 });

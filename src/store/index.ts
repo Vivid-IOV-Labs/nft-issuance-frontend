@@ -1,10 +1,19 @@
 import { createStore, createLogger } from "vuex";
-import nft from "./modules/nft";
+import createPersistedState from "vuex-persistedstate";
+
+import { NFTModule } from "./modules/nft";
+import { AuthModule } from "./modules/auth";
 const store = createStore({
   modules: {
-    nft,
+    nft: NFTModule,
+    auth: AuthModule
   },
   strict: true,
-  plugins: [createLogger()],
+  plugins: [
+    createLogger(),
+    createPersistedState({
+      paths: ["auth"],
+    })
+  ],
 });
 export default store;

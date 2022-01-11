@@ -1,11 +1,10 @@
-import { User } from "../../../models/User";
 
 export interface AuthState {
-  currentUser: User | null;
+  currentRole: string;
 }
 
 const state = (): AuthState => ({
-  currentUser: null,
+  currentRole: "",
 });
 
 export default state;

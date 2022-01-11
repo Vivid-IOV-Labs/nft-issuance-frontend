@@ -1,31 +1,28 @@
 <template>
   <div class="p-1">
-    <label
-      class="uppercase text-gray-700 text-xs font-bold mr-2"
-      :for="id"
+    <label class="uppercase text-gray-700 text-xs font-bold mr-2" :for="id"
       ><span v-if="!labelHidden"> {{ labelText }}</span>
-    <select
-      :id="id"
-      class="shadow-inner w-full text-gray-700 rounded py-2 px-4 mb-3 "
-      :aria-label="labelText"
-      :required="isRequeired"
-      :aria-required="isRequeired"
-      :aria-invalid="isInvalid"
-      v-bind="describedBy"
-      @blur="handleChange"
-      @change="handleChange"
-    >
-      <option
-        v-for="choice in choices"
-        :key="choice.label"
-        :value="choice.value"
-        :selected="choice.value == model"
+      <select
+        :id="id"
+        class="shadow-inner w-full text-gray-700 rounded py-2 px-4"
+        :aria-label="labelText"
+        :required="isRequeired"
+        :aria-required="isRequeired"
+        :aria-invalid="isInvalid"
+        v-bind="describedBy"
+        @blur="handleChange"
+        @change="handleChange"
       >
-        {{ choice.label }}
-      </option>
-    </select>
-    </label
-    >
+        <option
+          v-for="choice in choices"
+          :key="choice.label"
+          :value="choice.value"
+          :selected="choice.value == model"
+        >
+          {{ choice.label }}
+        </option>
+      </select>
+    </label>
   </div>
 </template>
 
@@ -74,7 +71,10 @@ export default defineComponent({
       return props.isInvalid ? { ariaDescribedby: `alert-${props.id}` } : {};
     });
     return {
-      model: typeof props.modelValue == 'string' ? props.modelValue : props.modelValue?.value,
+      model:
+        typeof props.modelValue == "string"
+          ? props.modelValue
+          : props.modelValue?.value,
       describedBy,
       handleChange(event: Event): void {
         const value = (event.target as HTMLSelectElement).value;
