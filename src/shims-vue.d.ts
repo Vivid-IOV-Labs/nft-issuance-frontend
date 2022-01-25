@@ -5,5 +5,4 @@ declare module "*.vue" {
 }
 
 declare module "@heroicons/*";
-declare module "locizer";
 declare module "vue-axe";
