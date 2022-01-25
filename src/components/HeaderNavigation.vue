@@ -87,7 +87,7 @@ export default defineComponent({
         ? "BRAND MANAGER"
         : isAdminWorker.value
         ? "ADMIN WORKER"
-        : "PUBLIC";
+        : "";
 
     const title = computed(() => getTitle());
 
