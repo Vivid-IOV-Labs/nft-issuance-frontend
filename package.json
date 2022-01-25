@@ -39,6 +39,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.1",
     "autoprefixer": "^10.3.7",
+    "axe-core": "^4.3.5",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",
     "eslint": "^7.28.0",

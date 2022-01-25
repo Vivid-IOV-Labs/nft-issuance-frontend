@@ -24,6 +24,7 @@ const canSee = (state: AuthState) =>
             : isAdminWorker(state)
                 ? JSON.stringify(["approved", "issued", "claiming", "delivered"])
                 : JSON.stringify(["issued", "claiming"]);
+
 export default {
     getCurrentRole,
     isBrandWorker,
