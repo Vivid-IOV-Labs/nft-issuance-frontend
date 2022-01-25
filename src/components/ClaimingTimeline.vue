@@ -1,7 +1,12 @@
 <template>
   <div class="p-2 my-1">
     <div class="flex flex-col md:grid grid-cols-12 text-gray-50">
-      <div v-for="status in history.filter((a, i) => history.findIndex((s) => a.title === s.title) === i) " class="flex md:contents">
+      <div
+        v-for="status in history.filter(
+          (a, i) => history.findIndex((s) => a.title === s.title) === i
+        )"
+        class="flex md:contents"
+      >
         <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">
           <div class="h-full w-4 flex items-center justify-center">
             <div
@@ -29,7 +34,7 @@
               text-center
             "
           >
-            <i class="fas fa-check-circle  text-white"></i>
+            <i class="fas fa-check-circle text-white"></i>
           </div>
         </div>
         <div
@@ -49,60 +54,8 @@
           "
         >
           <h3 class="font-bold text-sm mb-1">{{ status.title }}</h3>
-          <!-- <p class="leading-tight text-sm w-full">{{ status.message }}</p> -->
         </div>
       </div>
-
-      <!-- <div class="flex md:contents">
-          <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">
-            <div class="h-full w-4 flex items-center justify-center">
-              <div class="h-full w-1 bg-green-500 pointer-events-none"></div>
-            </div>
-            <div class="w-4 h-4 absolute top-1/2 -mt-3 rounded-full bg-green-500 shadow text-center">
-              <i class="fas fa-check-circle text-white"></i>
-            </div>
-          </div>
-          <div class="bg-green-500 col-start-4 col-end-12 p-3 rounded-xl my-4 mr-auto shadow-md w-full">
-            <h3 class="font-semibold mb-1">Out for Delivery</h3>
-            <p class="leading-tight text-sm ">
-              22 July 2021, 01:00 PM
-            </p>
-          </div>
-        </div>
-
-        <div class="flex md:contents">
-          <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">
-            <div class="h-full w-4 flex items-center justify-center">
-              <div class="h-full w-1 bg-red-500 pointer-events-none"></div>
-            </div>
-            <div class="w-4 h-4 absolute top-1/2 -mt-3 rounded-full bg-red-500 shadow text-center">
-              <i class="fas fa-times-circle text-white"></i>
-            </div>
-          </div>
-          <div class="bg-red-500 col-start-4 col-end-12 p-3 rounded-xl my-4 mr-auto shadow-md w-full">
-            <h3 class="font-semibold mb-1 text-gray-50">Cancelled</h3>
-            <p class="leading-tight text-sm ">
-              Customer cancelled the order
-            </p>
-          </div>
-        </div>
-
-        <div class="flex md:contents">
-          <div class="col-start-2 col-end-4 mr-10 md:mx-auto relative">
-            <div class="h-full w-4 flex items-center justify-center">
-              <div class="h-full w-1 bg-gray-300 pointer-events-none"></div>
-            </div>
-            <div class="w-4 h-4 absolute top-1/2 -mt-3 rounded-full bg-gray-300 shadow text-center">
-              <i class="fas fa-exclamation-circle text-gray-400"></i>
-            </div>
-          </div>
-          <div class="bg-gray-300 col-start-4 col-end-12 p-3 rounded-xl my-4 mr-auto shadow-md w-full">
-            <h3 class="font-semibold mb-1 text-gray-400">Delivered</h3>
-            <p class="leading-tight text-sm ">
-
-            </p>
-          </div>
-      </div>-->
     </div>
   </div>
 </template>

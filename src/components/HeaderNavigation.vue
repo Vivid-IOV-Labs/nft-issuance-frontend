@@ -9,9 +9,7 @@
       }"
       class="px-4 flex justify-between h-16 shadow"
     >
-      <!-- top bar left -->
       <ul class="flex items-center">
-        <!-- add button -->
         <li class="h-12 w-12 mr-2">
           <img
             class="h-full w-full mx-auto"

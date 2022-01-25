@@ -32,19 +32,4 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some((record) => record.meta.withAuth)) {
-//     if (localStorage.getItem("token") == null) {
-//       next({
-//         path: "/",
-//         params: { nextUrl: to.fullPath },
-//       });
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
 export default router;
