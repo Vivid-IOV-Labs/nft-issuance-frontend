@@ -307,18 +307,8 @@ export default defineComponent({
         ? props.nft.details.description
         : ""
     );
-    if (
-      props.nft.xumm &&
-      props.nft.xumm.length &&
-      props.nft.xumm[0].details.refs.qr_png &&
-      ["issued", "claiming"].includes(props.nft.current_status)
-    ) {
-      showQRCode.value = true;
-    }
-    if (
-      ["issued", "claiming"].includes(props.nft.current_status) &&
-      withRole(["public"])
-    ) {
+
+    function onClaim() {
       webSocket.socket.on("expired", (data) => {
         console.log("expired", data);
         invalidQR.value = true;
@@ -373,6 +363,20 @@ export default defineComponent({
         invalidQR.value = true;
       });
     }
+    if (
+      props.nft.xumm &&
+      props.nft.xumm.length &&
+      props.nft.xumm[0].details.refs.qr_png &&
+      ["issued", "claiming"].includes(props.nft.current_status)
+    ) {
+      showQRCode.value = true;
+    }
+    if (
+      ["issued", "claiming"].includes(props.nft.current_status) &&
+      withRole(["public"])
+    ) {
+      onClaim();
+    }
 
     return {
       isDeleteDialogOpen,
@@ -401,6 +405,7 @@ export default defineComponent({
       async claimNFT(): Promise<void> {
         await store.dispatch("nft/claim", props.nft);
         showQRCode.value = true;
+        onClaim();
       },
       editNFT() {
         router.push({ path: `/nft/edit/${props.nft.id}` });
