@@ -50,7 +50,9 @@
           placeholder="domain_protocol"
           :as-val="true"
           :is-required="'required' in v$.domain_protocol"
-          :is-invalid="v$.domain_protocol?.$dirty && v$.domain_protocol.$invalid"
+          :is-invalid="
+            v$.domain_protocol?.$dirty && v$.domain_protocol.$invalid
+          "
           :errors="formatVuelidateErrors(v$.domain_protocol.$errors)"
         ></base-select>
       </div>
@@ -108,7 +110,10 @@
           text="Is transferable_copyright"
           label-text="transferable_copyright"
           :is-required="'required' in v$.transferable_copyright"
-          :is-invalid="v$.transferable_copyright?.$dirty && v$.transferable_copyright.$invalid"
+          :is-invalid="
+            v$.transferable_copyright?.$dirty &&
+            v$.transferable_copyright.$invalid
+          "
           :errors="
             v$.transferable_copyright.$errors &&
             formatVuelidateErrors(v$.transferable_copyright.$errors)
@@ -137,8 +142,8 @@
           </base-button>
         </template>
       </base-dialog>
-      <base-button status="success" class="w-full" @click="submit"
-        >Submit</base-button
+      <async-button status="success" class="w-full" :on-click="submit"
+        >Submit</async-button
       >
     </form>
   </div>
@@ -148,6 +153,7 @@
 import BaseInput from "@/components/BaseInput.vue";
 import BaseTextArea from "@/components/BaseTextArea.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import AsyncButton from "@/components/AsyncButton.vue";
 import BaseCheckbox from "@/components/BaseCheckbox.vue";
 import BaseDialog from "@/components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
@@ -175,6 +181,7 @@ export default defineComponent({
     BaseInput,
     BaseTextArea,
     BaseButton,
+    AsyncButton,
     BaseCheckbox,
     BaseDialog,
     BaseMultiSelect,
@@ -191,7 +198,7 @@ export default defineComponent({
       subtitle: "",
       description: "",
       tags: [],
-      domain_protocol:"",
+      domain_protocol: "",
       categories: [],
       brand_name: "",
       transferable_copyright: false,
@@ -219,15 +226,18 @@ export default defineComponent({
       showError,
       showSuccess,
       errorMessage,
-      protocols:[{value:"http",label:"http"},{value:"https",label:"https"},{value:"ips",label:"ips"}],
-      async submit(event: Event) {
-        event.preventDefault();
+      protocols: [
+        { value: "http", label: "http" },
+        { value: "https", label: "https" },
+        { value: "ips", label: "ips" },
+      ],
+      async submit() {
         const isFormCorrect = await v$.value.$validate();
         if (!isFormCorrect) return;
         try {
           await store.dispatch("nft/create", formData);
           showSuccess.value = true;
-        } catch ({message}) {
+        } catch ({ message }) {
           errorMessage.value = String(message);
           showError.value = true;
         }

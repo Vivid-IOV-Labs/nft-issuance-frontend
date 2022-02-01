@@ -126,33 +126,33 @@
         @click="confirmDeleteNFT"
         >Delete</base-button
       >
-      <base-button
+      <async-button
         v-if="canApprove"
         class="mr-2"
         status="success"
-        @click="approveNFT"
-        >Approve</base-button
+        :on-click="approveNFT"
+        >Approve</async-button
       >
-      <base-button
+      <async-button
         v-if="canIssue"
         class="mr-2"
         status="success"
-        @click="issueNFT"
-        >Issue</base-button
+        :on-click="issueNFT"
+        >Issue</async-button
       >
-      <base-button
+      <async-button
         v-if="canClaim"
         class="mr-2"
         status="success"
-        @click="claimNFT"
-        >Claim</base-button
+        :on-click="claimNFT"
+        >Claim</async-button
       >
-      <base-button
+      <async-button
         v-if="canReject"
         class="mr-2"
         status="warning"
-        @click="rejectNFT"
-        >Reject</base-button
+        :on-click="rejectNFT"
+        >Reject</async-button
       >
     </div>
     <base-dialog
@@ -166,8 +166,18 @@
         </p>
       </template>
       <template #footer>
-        <base-button status="danger" class="ml-2" @click="deleteNFT">
+        <async-button status="danger" class="ml-2" :on-click="deleteNFT">
           Delete
+        </async-button>
+      </template>
+    </base-dialog>
+    <base-dialog :show="showError" title="Error" @close="showError = false">
+      <template #body>
+        <p>{{ errorMessage }}</p>
+      </template>
+      <template #footer>
+        <base-button status="success" class="ml-2" @click="showError = false">
+          OK
         </base-button>
       </template>
     </base-dialog>
@@ -177,6 +187,8 @@
 import ClaimingTimeline from "../components/ClaimingTimeline.vue";
 import BaseButton from "../components/BaseButton.vue";
 import BaseDialog from "../components/BaseDialog.vue";
+import AsyncButton from "../components/AsyncButton.vue";
+
 import { computed, PropType } from "vue";
 import { NFT } from "../models/NFT";
 import { useRouter } from "vue-router";
@@ -202,6 +214,7 @@ export default defineComponent({
     BaseButton,
     BaseDialog,
     QrcodeIcon,
+    AsyncButton,
     ClaimingTimeline,
   },
   props: {
@@ -210,6 +223,8 @@ export default defineComponent({
   setup: (props) => {
     const store = useStore();
     const router = useRouter();
+    const showError = ref(false);
+    const errorMessage = ref<string>("");
     const isDeleteDialogOpen = ref(false);
     const showQRCode = ref(false);
     const invalidQR = ref(false);
@@ -389,27 +404,54 @@ export default defineComponent({
       confirmDeleteNFT() {
         isDeleteDialogOpen.value = true;
       },
-      deleteNFT(): void {
-        isDeleteDialogOpen.value = false;
-        store.dispatch("nft/remove", [props.nft.id]);
+      async deleteNFT(): Promise<void> {
+        try {
+          isDeleteDialogOpen.value = false;
+          store.dispatch("nft/remove", [props.nft.id]);
+        } catch ({ message }) {
+          errorMessage.value = String(message);
+          showError.value = true;
+        }
       },
       approveNFT(): void {
-        store.dispatch("nft/approve", props.nft);
+        try {
+          store.dispatch("nft/approve", props.nft);
+        } catch ({ message }) {
+          errorMessage.value = String(message);
+          showError.value = true;
+        }
       },
-      rejectNFT(): void {
-        store.dispatch("nft/reject", props.nft);
+      async rejectNFT(): Promise<void> {
+        try {
+          store.dispatch("nft/reject", props.nft);
+        } catch ({ message }) {
+          errorMessage.value = String(message);
+          showError.value = true;
+        }
       },
-      issueNFT(): void {
-        store.dispatch("nft/issue", props.nft);
+      async issueNFT(): Promise<void> {
+        try {
+          await store.dispatch("nft/issue", props.nft);
+        } catch ({ message }) {
+          errorMessage.value = String(message);
+          showError.value = true;
+        }
       },
       async claimNFT(): Promise<void> {
-        await store.dispatch("nft/claim", props.nft);
-        showQRCode.value = true;
-        onClaim();
+        try {
+          await store.dispatch("nft/claim", props.nft);
+          showQRCode.value = true;
+          onClaim();
+        } catch ({ message }) {
+          errorMessage.value = String(message);
+          showError.value = true;
+        }
       },
       editNFT() {
         router.push({ path: `/nft/edit/${props.nft.id}` });
       },
+      showError,
+      errorMessage,
       canUpdate,
       canDelete,
       canApprove,

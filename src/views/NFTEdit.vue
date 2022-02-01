@@ -130,8 +130,8 @@
           </base-button>
         </template>
       </base-dialog>
-      <base-button status="info" class="w-full" @click="submit"
-        >Update</base-button
+      <async-button status="info" class="w-full" :on-click="submit"
+        >Update</async-button
       >
     </form>
   </div>
@@ -141,6 +141,7 @@
 import BaseInput from "@/components/BaseInput.vue";
 import BaseTextArea from "@/components/BaseTextArea.vue";
 import BaseButton from "../components/BaseButton.vue";
+import AsyncButton from "../components/AsyncButton.vue";
 import BaseCheckbox from "../components/BaseCheckbox.vue";
 import BaseDialog from "../components/BaseDialog.vue";
 import BaseMultiSelect from "@/components/BaseMultiSelect.vue";
@@ -157,6 +158,7 @@ export default defineComponent({
   components: {
     BaseInput,
     BaseButton,
+    AsyncButton,
     BaseCheckbox,
     BaseDialog,
     ArrowLeftIcon,
@@ -200,8 +202,7 @@ export default defineComponent({
         { value: "https", label: "https" },
         { value: "ipfs", label: "ipfs" },
       ],
-      async submit(event: Event) {
-        event.preventDefault();
+      async submit() {
         const isFormCorrect = await v$.value.$validate();
         if (!isFormCorrect) return;
         try {
