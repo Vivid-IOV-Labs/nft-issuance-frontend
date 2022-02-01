@@ -51,9 +51,6 @@ import BaseInput from "../components/BaseInput.vue";
 import { useStore } from "vuex";
 import { PlusIcon } from "@heroicons/vue/solid";
 import { useRoute } from "vue-router";
-function getRole() {
-  return localStorage.getItem("user-role");
-}
 
 export default defineComponent({
   components: {
