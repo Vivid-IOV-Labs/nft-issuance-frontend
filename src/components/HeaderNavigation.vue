@@ -95,7 +95,6 @@ export default defineComponent({
 
     return {
       roles: [
-        { label: "Select User", value: null },
         { label: "Brand Worker", value: "brand/worker" },
         { label: "Brand Manager", value: "brand/manager" },
         { label: "Admin", value: "admin/worker" },
@@ -113,11 +112,6 @@ export default defineComponent({
         router.push({ path: "/" });
       },
     };
-  },
-  methods: {
-    changeLanguage(lang: string) {
-      if (this.$root) this.$root.$i18n.locale = lang;
-    },
   },
 });
 </script>

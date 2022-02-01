@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
 import NftCard from "../components/NFTCard.vue";
 import BaseInput from "../components/BaseInput.vue";
 import { useStore } from "vuex";
@@ -54,10 +54,7 @@ import { useRoute } from "vue-router";
 function getRole() {
   return localStorage.getItem("user-role");
 }
-function withRole(roles: string[]) {
-  roles.includes(getRole() || "");
-  return roles.includes(getRole() || "");
-}
+
 export default defineComponent({
   components: {
     NftCard,
@@ -68,12 +65,12 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     await store.dispatch("nft/fetchAll", route.query);
-    // watch(
-    //   () => route.query,
-    //   async () => {
-    //     await store.dispatch("nft/fetchAll", route.query);
-    //   }
-    // );
+    const currentRole = computed(() => store.getters["auth/getCurrentRole"]);
+
+    watch(currentRole, async () => {
+      await store.dispatch("nft/fetchAll", route.query);
+    });
+
     const searchByTitle = ref("");
     const allNFT = computed(() => {
       return store.getters["nft/byTitle"](searchByTitle.value);
