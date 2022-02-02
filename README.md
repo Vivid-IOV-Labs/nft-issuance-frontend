@@ -13,6 +13,7 @@ Create a ".env" file similar to the one shown by the file called ".env.example".
 
 It is recommended to start the NFT issuance backend application first before staring this application, when working locally.
 
+Use command ```npm run dev``` when working with this application locally.
 
 A video demonstration of the application can be found [here]()
 
