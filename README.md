@@ -2,7 +2,7 @@
 
 ### Description
 
-A frontend application for the "XRPL NFT Issuance Service" backend application. The backend application can be found here: [peerkat-nft](https://github.com/Vivid-IOV-Labs/nft-issuance).
+A frontend application for the "XRPL NFT Issuance Service" backend application. The backend application can be found here: [nft-issuance](https://github.com/Vivid-IOV-Labs/nft-issuance).
 
 
 ### Setup
