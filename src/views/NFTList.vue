@@ -1,17 +1,13 @@
 <template>
   <div class="flex flex-col justify-center items-center mb-2">
-    <h2>
-      <span>Welcome</span>
-    </h2>
-    <hr />
     <base-input
       id="search"
       v-model="searchByTitle"
-      placeholder="Ex: peerkat"
+      placeholder="Search by title"
       type="search"
       label-text="Search NFT by Title"
       :label-hidden="true"
-      class="w-full max-w-xl"
+      class="w-full max-w-xl mt-2"
     ></base-input>
   </div>
 

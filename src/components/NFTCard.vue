@@ -11,7 +11,10 @@
         @error="fallbackImg"
       />
     </div>
-    <claiming-timeline :history="claimingHistory"></claiming-timeline>
+    <claiming-timeline
+      v-if="isPublic"
+      :history="claimingHistory"
+    ></claiming-timeline>
 
     <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
       <a
@@ -197,17 +200,15 @@ import { ref, defineComponent, reactive } from "vue";
 import webSocket from "../utils/websocketAdaptor";
 import { QrcodeIcon } from "@heroicons/vue/solid";
 
-function getRole() {
-  return localStorage.getItem("user-role");
-}
-function withRole(roles: string[]) {
-  roles.includes(getRole() || "");
-  return roles.includes(getRole() || "");
-}
 interface Status {
   title: string;
   message: string;
   type: string;
+}
+function clearArray<T>(array: T[]) {
+  while (array.length) {
+    array.pop();
+  }
 }
 export default defineComponent({
   components: {
@@ -332,6 +333,7 @@ export default defineComponent({
           message: "expired",
           type: "error",
         });
+        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
       });
       webSocket.socket.on("scanned", (data) => {
         claimingHistory.push({
@@ -367,6 +369,8 @@ export default defineComponent({
           message: "rejected suyccessfully",
           type: "error",
         });
+        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
+
         invalidQR.value = true;
       });
       webSocket.socket.on("unverified", (data) => {
@@ -375,6 +379,8 @@ export default defineComponent({
           message: "unverified suyccessfully",
           type: "error",
         });
+        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
+
         invalidQR.value = true;
       });
     }
@@ -384,13 +390,8 @@ export default defineComponent({
       props.nft.xumm[0].details.refs.qr_png &&
       ["issued", "claiming"].includes(props.nft.current_status)
     ) {
-      showQRCode.value = true;
-    }
-    if (
-      ["issued", "claiming"].includes(props.nft.current_status) &&
-      withRole(["public"])
-    ) {
       onClaim();
+      showQRCode.value = true;
     }
 
     return {
@@ -439,8 +440,11 @@ export default defineComponent({
       },
       async claimNFT(): Promise<void> {
         try {
+          Object.assign(claimingHistory, []);
+          clearArray(claimingHistory);
           await store.dispatch("nft/claim", props.nft);
           showQRCode.value = true;
+          invalidQR.value = false;
           onClaim();
         } catch ({ message }) {
           errorMessage.value = String(message);
@@ -469,6 +473,7 @@ export default defineComponent({
       categories,
       subtitle,
       description,
+      isPublic,
     };
   },
 });

@@ -181,12 +181,10 @@ export default defineComponent({
       domain_protocol: { required },
       subtitle: {},
       description: {},
-      brand_name: {
-        required,
-      },
-      transferable_copyright: { required },
-      tags: { required },
-      categories: { required },
+      brand_name: {},
+      transferable_copyright: {},
+      tags: {},
+      categories: {},
     }));
 
     const v$ = useVuelidate(rules, formData, { $autoDirty: true });

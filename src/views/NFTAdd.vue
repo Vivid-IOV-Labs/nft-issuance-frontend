@@ -209,15 +209,13 @@ export default defineComponent({
     const rules = computed(() => ({
       title: { required },
       token_name: { required, maxLength: maxLength(18) },
+      domain_protocol: { required },
       subtitle: {},
       description: {},
-      brand_name: {
-        required,
-      },
-      transferable_copyright: { required },
-      domain_protocol: { required },
-      tags: { required },
-      categories: { required },
+      brand_name: {},
+      transferable_copyright: {},
+      tags: {},
+      categories: {},
     }));
     const v$ = useVuelidate(rules, formData, { $autoDirty: true });
     return {
