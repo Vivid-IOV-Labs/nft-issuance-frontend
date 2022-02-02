@@ -114,7 +114,7 @@
         @close="showSuccess = false"
       >
         <template #body>
-          <p>Media added successfully</p>
+          <p>Media updated successfully</p>
         </template>
         <template #footer>
           <base-button class="ml-2" @click="pushToMediaList"> OK </base-button>

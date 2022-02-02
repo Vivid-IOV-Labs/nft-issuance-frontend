@@ -300,7 +300,7 @@ export default defineComponent({
               acc += ` #${tag},`;
               return acc;
             }, "")
-            .slice(1, -1)
+            .slice(0, -1)
         : ""
     );
     const categories = computed(() =>
@@ -310,7 +310,7 @@ export default defineComponent({
               acc += `${tag},`;
               return acc;
             }, "")
-            .slice(1, -1)
+            .slice(0, -1)
         : ""
     );
     const subtitle = computed(() =>
