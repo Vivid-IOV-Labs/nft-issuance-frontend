@@ -10,13 +10,6 @@
       class="px-4 flex justify-between h-16 shadow"
     >
       <ul class="flex items-center">
-        <li class="h-12 w-12 mr-2">
-          <img
-            class="h-full w-full mx-auto"
-            src="@/assets/img/logopeerkat.png"
-            alt="Peerkat logo"
-          />
-        </li>
         <li class="mr-2">
           <span class="text-lg uppercase font-bold">nft Test</span>
         </li>
