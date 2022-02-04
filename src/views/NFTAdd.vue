@@ -11,7 +11,7 @@
           v-model="formData.token_name"
           label-text="token_name"
           type="text"
-          placeholder="Media ID"
+          placeholder="Token Name"
           :is-required="'required' in v$.token_name"
           :is-invalid="v$.token_name?.$dirty && v$.token_name.$invalid"
           :errors="formatVuelidateErrors(v$.token_name.$errors)"
@@ -126,7 +126,7 @@
         @close="showSuccess = false"
       >
         <template #body>
-          <p>Media added successfully</p>
+          <p>Submitted successfully</p>
         </template>
         <template #footer>
           <base-button class="ml-2" @click="pushToMediaList"> OK </base-button>
@@ -164,6 +164,7 @@ import { useRouter } from "vue-router";
 import useVuelidate from "@vuelidate/core";
 import { required, url, maxLength } from "@vuelidate/validators";
 import { ArrowLeftIcon } from "@heroicons/vue/solid";
+import { ApiError } from "../services/ApiService";
 
 export interface ErrorObject {
   $propertyPath: string;
@@ -234,9 +235,9 @@ export default defineComponent({
         try {
           await store.dispatch("nft/create", formData);
           showSuccess.value = true;
-        } catch (error) {
-          console.log(errror)
-          errorMessage.value = String(message);
+        } catch (error: any | ApiError) {
+          errorMessage.value =
+            error && error.message ? String(error.message) : "No message";
           showError.value = true;
         }
       },

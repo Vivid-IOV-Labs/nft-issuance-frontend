@@ -428,9 +428,9 @@ export default defineComponent({
           showError.value = true;
         }
       },
-      approveNFT(): void {
+      async approveNFT(): Promise<void> {
         try {
-          store.dispatch("nft/approve", props.nft);
+          await store.dispatch("nft/approve", props.nft);
         } catch ({ message }) {
           errorMessage.value = String(message);
           showError.value = true;

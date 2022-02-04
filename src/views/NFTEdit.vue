@@ -114,7 +114,7 @@
         @close="showSuccess = false"
       >
         <template #body>
-          <p>Media updated successfully</p>
+          <p>Updated successfully</p>
         </template>
         <template #footer>
           <base-button class="ml-2" @click="pushToMediaList"> OK </base-button>
@@ -153,6 +153,7 @@ import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required, url, maxLength } from "@vuelidate/validators";
 import NFTService from "../services/NFTService";
+import { ApiError } from "../services/ApiService";
 
 export default defineComponent({
   components: {
@@ -205,13 +206,9 @@ export default defineComponent({
         try {
           await store.dispatch("nft/update", { id: nft.id, details: formData });
           showSuccess.value = true;
-        } catch (err: any) {
-          const {
-            response: {
-              data: { message },
-            },
-          } = err;
-          errorMessage.value = String(message);
+        } catch (error: any | ApiError) {
+          errorMessage.value =
+            error && error.message ? String(error.message) : "No message";
           showError.value = true;
         }
       },

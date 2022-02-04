@@ -23,16 +23,28 @@
         </option>
       </select>
     </label>
+    <base-alert
+      v-if="errors.length"
+      :id="`alert-${id}`"
+      :messages="errors"
+      role="alert"
+      status="danger"
+    >
+    </base-alert>
   </div>
 </template>
 
 <script lang="ts">
+import BaseAlert from "@/components/BaseAlert.vue";
 import { defineComponent, PropType, computed } from "vue";
 interface Choice {
   label: string;
   value?: string | number;
 }
 export default defineComponent({
+  components: {
+    BaseAlert,
+  },
   props: {
     choices: {
       type: Array as PropType<Choice[]>,

@@ -4,7 +4,7 @@ export interface AuthState {
 }
 
 const state = (): AuthState => ({
-  currentRole: "",
+  currentRole: "brand/worker",
 });
 
 export default state;

@@ -4,7 +4,11 @@ import axios, {
   AxiosRequestConfig,
   AxiosError,
 } from "axios";
-
+export interface ApiError {
+  data: any;
+  message: string;
+  status: string;
+}
 const baseURL = import.meta.env.VITE_API_URL;
 
 const config: AxiosRequestConfig = {
@@ -13,9 +17,10 @@ const config: AxiosRequestConfig = {
 
 const apiService: AxiosInstance = axios.create(config);
 
-const errorHandler = (error: AxiosError) => {
+const errorHandler = (error: AxiosError): Promise<ApiError> => {
+  const { response } = error;
   debugger
-  return Promise.reject({ ...error });
+  return Promise.reject(response?.data);
 
 };
 
