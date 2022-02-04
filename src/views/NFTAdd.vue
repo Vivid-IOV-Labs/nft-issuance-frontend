@@ -234,7 +234,8 @@ export default defineComponent({
         try {
           await store.dispatch("nft/create", formData);
           showSuccess.value = true;
-        } catch ({ message }) {
+        } catch (error) {
+          console.log(errror)
           errorMessage.value = String(message);
           showError.value = true;
         }

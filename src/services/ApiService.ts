@@ -14,7 +14,9 @@ const config: AxiosRequestConfig = {
 const apiService: AxiosInstance = axios.create(config);
 
 const errorHandler = (error: AxiosError) => {
+  debugger
   return Promise.reject({ ...error });
+
 };
 
 const successHandler = (response: AxiosResponse) => {

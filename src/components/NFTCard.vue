@@ -332,7 +332,7 @@ export default defineComponent({
           message: "expired",
           type: "error",
         });
-        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
+        store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
       });
       webSocket.socket.on("scanned", (data) => {
         claimingHistory.push({
@@ -347,7 +347,7 @@ export default defineComponent({
           message: "signed suyccessfully",
           type: "success",
         });
-        store.commit("nft/setStatus", { id: props.nft.id, status: "signed" });
+        store.commit("nft/setStatus", { id: data.nftId, status: "signed" });
         invalidQR.value = true;
       });
       webSocket.socket.on("delivered", (data) => {
@@ -357,7 +357,7 @@ export default defineComponent({
           type: "success",
         });
         store.commit("nft/setStatus", {
-          id: props.nft.id,
+          id: data.nftId,
           status: "delivered",
         });
         invalidQR.value = true;
@@ -368,7 +368,7 @@ export default defineComponent({
           message: "rejected suyccessfully",
           type: "error",
         });
-        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
+        store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
 
         invalidQR.value = true;
       });
@@ -378,7 +378,7 @@ export default defineComponent({
           message: "unverified suyccessfully",
           type: "error",
         });
-        store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
+        store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
 
         invalidQR.value = true;
       });
@@ -390,6 +390,7 @@ export default defineComponent({
         });
         showError.value = true;
         errorMessage.value = String(data.message);
+        //store.commit("nft/setStatus", { id: data.nftId, status: "error" });
       });
     }
     if (
