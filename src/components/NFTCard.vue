@@ -336,7 +336,7 @@ export default defineComponent({
       });
       webSocket.socket.on("scanned", (data) => {
         claimingHistory.push({
-          title: "Scanned",
+          title: "canned",
           message: "scanned suyccessfully",
           type: "success",
         });
@@ -383,6 +383,11 @@ export default defineComponent({
         invalidQR.value = true;
       });
       webSocket.socket.on("error", (data) => {
+        claimingHistory.push({
+          title: "error",
+          message: "unverified suyccessfully",
+          type: "error",
+        });
         showError.value = true;
         errorMessage.value = String(data.message);
       });
