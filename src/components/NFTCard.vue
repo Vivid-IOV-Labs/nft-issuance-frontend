@@ -326,7 +326,6 @@ export default defineComponent({
 
     function onClaim() {
       webSocket.socket.on("expired", (data) => {
-        console.log("expired", data);
         invalidQR.value = true;
         claimingHistory.push({
           title: "Expired",
@@ -382,6 +381,10 @@ export default defineComponent({
         store.commit("nft/setStatus", { id: props.nft.id, status: "issued" });
 
         invalidQR.value = true;
+      });
+      webSocket.socket.on("error", (data) => {
+        showError.value = true;
+        errorMessage.value = String(data.message);
       });
     }
     if (
