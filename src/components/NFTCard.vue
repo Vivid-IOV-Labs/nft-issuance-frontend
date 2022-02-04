@@ -76,6 +76,11 @@
           {{ title }}
           <small class="text-sm text-gray-600">{{ brand_name }}</small>
         </h2>
+        <p>
+          <span class="text-sm text-gray-400 font-medium"
+            >Token Name: {{ tokenName }}</span
+          >
+        </p>
         <div class="flex mt-2">
           <span
             v-if="nft.current_status"
