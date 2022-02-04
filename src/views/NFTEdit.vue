@@ -198,7 +198,6 @@ export default defineComponent({
       protocols: [
         { value: "http", label: "http" },
         { value: "https", label: "https" },
-        { value: "ipfs", label: "ipfs" },
       ],
       async submit() {
         const isFormCorrect = await v$.value.$validate();
