@@ -341,7 +341,7 @@ export default defineComponent({
       });
       webSocket.socket.on("scanned", (data) => {
         claimingHistory.push({
-          title: "canned",
+          title: "scanned",
           message: "scanned suyccessfully",
           type: "success",
         });
