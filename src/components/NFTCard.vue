@@ -13,7 +13,7 @@
     </div>
     <claiming-timeline
       v-if="isPublic"
-      :history="claimingHistory"
+      :history="nft.claiming_history"
     ></claiming-timeline>
 
     <div v-if="canScan" class="flex justify-between h-12 p-3 items-center">
@@ -332,34 +332,46 @@ export default defineComponent({
     function onClaim() {
       webSocket.socket.on("expired", (data) => {
         invalidQR.value = true;
-        claimingHistory.push({
-          title: "Expired",
-          message: "expired",
-          type: "error",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "Expired",
+            message: "expired",
+            type: "error",
+          },
         });
         store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
       });
       webSocket.socket.on("scanned", (data) => {
-        claimingHistory.push({
-          title: "scanned",
-          message: "scanned suyccessfully",
-          type: "success",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "scanned",
+            message: "scanned suyccessfully",
+            type: "success",
+          },
         });
       });
       webSocket.socket.on("signed", (data) => {
-        claimingHistory.push({
-          title: "signed",
-          message: "signed suyccessfully",
-          type: "success",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "signed",
+            message: "signed suyccessfully",
+            type: "success",
+          },
         });
         store.commit("nft/setStatus", { id: data.nftId, status: "signed" });
         invalidQR.value = true;
       });
       webSocket.socket.on("delivered", (data) => {
-        claimingHistory.push({
-          title: "delivered",
-          message: "delivered suyccessfully",
-          type: "success",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "delivered",
+            message: "delivered suyccessfully",
+            type: "success",
+          },
         });
         store.commit("nft/setStatus", {
           id: data.nftId,
@@ -368,34 +380,43 @@ export default defineComponent({
         invalidQR.value = true;
       });
       webSocket.socket.on("rejected", (data) => {
-        claimingHistory.push({
-          title: "rejected",
-          message: "rejected suyccessfully",
-          type: "error",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "rejected",
+            message: "rejected suyccessfully",
+            type: "error",
+          },
         });
         store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
 
         invalidQR.value = true;
       });
       webSocket.socket.on("unverified", (data) => {
-        claimingHistory.push({
-          title: "unverified",
-          message: "unverified suyccessfully",
-          type: "error",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "unverified",
+            message: "unverified ",
+            type: "error",
+          },
         });
         store.commit("nft/setStatus", { id: data.nftId, status: "issued" });
 
         invalidQR.value = true;
       });
       webSocket.socket.on("error", (data) => {
-        claimingHistory.push({
-          title: "error",
-          message: "unverified suyccessfully",
-          type: "error",
+        store.commit("nft/addClaimingHistory", {
+          id: data.nftId,
+          claiming_status: {
+            title: "error",
+            message: "unverified",
+            type: "error",
+          },
         });
         showError.value = true;
         errorMessage.value = String(data.message);
-        //store.commit("nft/setStatus", { id: data.nftId, status: "error" });
+        store.commit("nft/setStatus", { id: data.nftId, status: "error" });
       });
     }
     if (
@@ -454,8 +475,7 @@ export default defineComponent({
       },
       async claimNFT(): Promise<void> {
         try {
-          Object.assign(claimingHistory, []);
-          clearArray(claimingHistory);
+          store.commit("nft/cleanClaimingHistory", { id: props.nft.id });
           await store.dispatch("nft/claim", props.nft);
           showQRCode.value = true;
           invalidQR.value = false;

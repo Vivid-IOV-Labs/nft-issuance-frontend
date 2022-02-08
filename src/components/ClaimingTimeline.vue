@@ -62,15 +62,14 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { PropType } from "vue";
+import { XummSigningHistory } from "../models/NFT";
 
-interface Status {
-  title: string;
-  message: string;
-  type: string;
-}
 export default defineComponent({
   props: {
-    history: { type: Array as PropType<Status[]>, default: () => [] },
+    history: {
+      type: Array as PropType<XummSigningHistory[]>,
+      default: () => [],
+    },
   },
 });
 </script>

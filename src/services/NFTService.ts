@@ -80,7 +80,6 @@ async function update(
   nftToUpdate: NFT["details"],
   id: NFT["id"]
 ): Promise<NFT> {
-  console.log(nftToUpdate, id);
   const {
     data: { nft: updatedNFT },
   } = await ApiService.patch(`${API_ENDPOINT}?id=${id}`, {

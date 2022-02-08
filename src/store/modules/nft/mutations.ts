@@ -37,6 +37,23 @@ const mutations: MutationTree<NFTState> = {
       state.all[index].current_status = status;
     }
   },
+  addClaimingHistory(state: NFTState, { id, claiming_status }): void {
+    const index = state.all.findIndex((nft) => {
+      return nft.id === id;
+    });
+    if (index > -1) {
+      const claiming_history = state.all[index].claiming_history || []
+      state.all[index].claiming_history = [...claiming_history, claiming_status];
+    }
+  },
+  cleanClaimingHistory(state: NFTState, { id }): void {
+    const index = state.all.findIndex((nft) => {
+      return nft.id === id;
+    });
+    if (index > -1) {
+      state.all[index].claiming_history = []
+    }
+  },
 };
 
 export default mutations;

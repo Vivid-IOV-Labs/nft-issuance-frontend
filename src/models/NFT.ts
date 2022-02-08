@@ -21,6 +21,11 @@ interface xumn_block {
   updatedAt: number;
   xumm_api_status: "";
 }
+export interface XummSigningHistory {
+  title: string,
+  text: string,
+  status: string,
+}
 export interface NFT {
   id: string;
   details: {
@@ -37,4 +42,5 @@ export interface NFT {
   current_status: string;
   previous_status: string;
   xumm: xumn_block[];
+  claiming_history: XummSigningHistory[]
 }

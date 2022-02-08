@@ -19,7 +19,6 @@ const apiService: AxiosInstance = axios.create(config);
 
 const errorHandler = (error: AxiosError): Promise<ApiError> => {
   const { response } = error;
-  debugger
   return Promise.reject(response?.data);
 
 };
