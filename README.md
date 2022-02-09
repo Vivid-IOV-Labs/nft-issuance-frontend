@@ -15,7 +15,7 @@ It is recommended to start the NFT issuance backend application first before sta
 
 Use command ```npm run dev``` when working with this application locally.
 
-A video demonstration of the application can be found [here]()
+A video demonstration of the application can be found here: [NFT issuance demo video](https://ipfs.io/ipfs/QmVU7kZyd8TkSKgRDMwQPa5vrDFsZ2grB7L8YJqTz6rY1o).
 
 
 ### Framework
